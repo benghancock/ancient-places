@@ -61,10 +61,55 @@ case, so your mileage may vary.
 
 Our security model will be pretty basic: we will create one role to administer
 the database (create the tables, etc.), and another role for the application
-with `SELECT`-only privileges to read the tables or views that it needs.
+with `SELECT`-only privileges to read the tables or views that it needs. For
+this document, I will leave aside how to install and set up the database server
+itself. This likely varies depending on your operating system anyway; I built
+this project on a local installation of Fedora Linux on my laptop, so if you’re
+in a similar environment, you may find this tutorial helpful:
+https://docs.fedoraproject.org/en-US/quick-docs/postgresql/
 
-For now this document, I will leave aside how to install and set up the
-database server itself. This likely varies depending on your operating system
-anyway; I built this project on a local installation of Fedora Linux on my
-laptop, so if you’re in a similar environment, you may find this tutorial
-helpful: https://docs.fedoraproject.org/en-US/quick-docs/postgresql/
+Once you have your database server installed and running, connect using the
+``psql`` command line tool. You will first need to to this as the Postgres
+"superuser", named ``postgres``. Below is an example session; note that the
+statements that were executed are echoed after they succeed:
+
+.. code:: shell
+
+    $ sudo -u postgres psql
+    # prompt for password
+    psql (14.3)
+    Type "help" for help.
+
+    postgres=# CREATE DATABASE archaia;
+    CREATE DATABASE
+    postgres=# CREATE ROLE archaia_admin NOINHERIT;
+    CREATE ROLE
+    postgres=# ALTER DATABASE archaia OWNER TO archaia_admin;
+    ALTER DATABASE
+    postgres=# GRANT archaia_admin TO {your user here};
+    GRANT ROLE
+
+Here we are making use of Postgres' `role-based permissions model`_, by
+creating a database and a dedicated admin role for that database that has no
+other special permissions. In the final statement, we make our user (that is,
+the username you use on your operating system) a *member* of the
+``archaia_admin`` group, so that we can administer this database from our
+regular user account without creating a new special password. We could also
+make others members of this group, and remove them as appropriate.
+
+Now, we are ready to exit our superuser session and log back in:
+
+.. code:: shell
+
+    postgres=# \q
+    $ psql -d archaia
+    psql (14.3)
+    Type "help" for help.
+
+    archaia=>
+
+Once we have done this, we can now create the necessary tables to hold the
+"places" data we fetched from Pleiades. Please refer to the file
+``create_places_tables.sql`` in the ``sql/`` directory of this project.
+
+.. _role-based permissions model: https://www.postgresql.org/docs/14/user-manag.html
