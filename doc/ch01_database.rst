@@ -28,8 +28,8 @@ Pleiades offers its data in a variety of formats, all of which are available at
 this URL: https://pleiades.stoa.org/downloads
 
 For this project, we will use the `GIS package`_, and specifically the
-"locations*" tables that it contains. For easy retrieval of the necessary
-tables, use the ``fetch_pleiades_data.sh`` script in the ``scripts/`` directory,
+"places*" tables that it contains. For easy retrieval of the necessary tables,
+use the ``fetch_pleiades_places.sh`` script in the ``scripts/`` directory,
 found in the root of this project.
 
 .. _Pleiades: https://pleiades.stoa.org/
