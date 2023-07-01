@@ -24,15 +24,47 @@ As noted in the README, this project utilizes data from two main sources:
 prior to setting up the database that will eventually store it for use with the
 application.
 
-Pleiades offers its data in a variety of formats, all of which are available at
-this URL: https://pleiades.stoa.org/downloads
+Pleiades is a public repository or “gazetteer” of geographic information about
+the ancient world. It offers its data in a variety of formats, all of which are
+available at this URL: https://pleiades.stoa.org/downloads
 
 For this project, we will use the `GIS package`_, and specifically the
 "places*" tables that it contains. For easy retrieval of the necessary tables,
 use the ``fetch_pleiades_places.sh`` script in the ``scripts/`` directory,
 found in the root of this project.
 
+Running this script will leave three files in the working directory (described
+below as in the Pleiades README file):
+
+* ``places.csv``: Pleiades Places.
+* ``place_types.csv``: terms from the Place Types
+* ``places_place_types.csv``: matches place ids (join to places.csv:id)
+  to placetype ids (join to place_types.csv:key).
+
+Once we've retrieved these, we're ready for the next step.
+
 .. _Pleiades: https://pleiades.stoa.org/
 .. _Natural Earth: https://www.naturalearthdata.com/
 .. _GIS package: https://atlantides.org/downloads/pleiades/gis/
 
+
+Setting up the Database
+-----------------------
+
+When starting out configuring your database, it's a good idea to think about
+your security model -- even if this is just a hobby project with public data.
+You don't want bad actors abusing your database. Again, in this example I will
+assume that you are setting up the database yourself, and that we will be
+running both the Postgres server and the application on the same host. If you
+are using a managed service in the cloud, this will almost certainly not be the
+case, so your mileage may vary.
+
+Our security model will be pretty basic: we will create one role to administer
+the database (create the tables, etc.), and another role for the application
+with `SELECT`-only privileges to read the tables or views that it needs.
+
+For now this document, I will leave aside how to install and set up the
+database server itself. This likely varies depending on your operating system
+anyway; I built this project on a local installation of Fedora Linux on my
+laptop, so if you’re in a similar environment, you may find this tutorial
+helpful: https://docs.fedoraproject.org/en-US/quick-docs/postgresql/
