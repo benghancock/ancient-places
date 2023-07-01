@@ -1,12 +1,10 @@
-================================
-Ancient Places - Database Setup
-================================
+---
+title: Ancient Places - Database Setup
+author: Ben Hancock
+date: Summer 2023
+---
 
-:Author:  Ben Hancock
-:Date:    Summer 2023
-
-Overview
---------
+# Overview
 
 This document covers how to fetch the data to build the Ancient Places
 database, and setting up the database itself. This project uses PostgreSQL
@@ -15,22 +13,21 @@ assumes that you are setting up the database yourself, rather than using a
 managed service.
 
 
-Retrieving the Data
--------------------
+# Retrieving the Data
 
 As noted in the README, this project utilizes data from two main sources:
-`Pleiades`_ for data on archaelogical sites, and  geographical data from
-`Natural Earth`_. This section covers how to retrieve and prepare the data
+[Pleiades] for data on archaelogical sites, and  geographical data from
+[Natural Earth]. This section covers how to retrieve and prepare the data
 prior to setting up the database that will eventually store it for use with the
 application.
 
 Pleiades is a public repository or “gazetteer” of geographic information about
 the ancient world. It offers its data in a variety of formats, all of which are
-available at this URL: https://pleiades.stoa.org/downloads
+available at this URL: <https://pleiades.stoa.org/downloads>
 
-For this project, we will use the `GIS package`_, and specifically the
-"places*" tables that it contains. For easy retrieval of the necessary tables,
-use the ``fetch_pleiades_places.sh`` script in the ``scripts/`` directory,
+For this project, we will use the [GIS package], and specifically the
+`"places*"` tables that it contains. For easy retrieval of the necessary tables,
+use the ``fetch_pleiades_places.sh`` script in the `scripts/` directory,
 found in the root of this project.
 
 Running this script will leave three files in the working directory (described
@@ -43,13 +40,12 @@ below as in the Pleiades README file):
 
 Once we've retrieved these, we're ready for the next step.
 
-.. _Pleiades: https://pleiades.stoa.org/
-.. _Natural Earth: https://www.naturalearthdata.com/
-.. _GIS package: https://atlantides.org/downloads/pleiades/gis/
+[Pleiades]: https://pleiades.stoa.org/
+[Natural Earth]: https://www.naturalearthdata.com/
+[GIS package]: https://atlantides.org/downloads/pleiades/gis/
 
 
-Setting up the Database
------------------------
+# Setting up the Database
 
 When starting out configuring your database, it's a good idea to think about
 your security model -- even if this is just a hobby project with public data.
@@ -66,50 +62,50 @@ this document, I will leave aside how to install and set up the database server
 itself. This likely varies depending on your operating system anyway; I built
 this project on a local installation of Fedora Linux on my laptop, so if you’re
 in a similar environment, you may find this tutorial helpful:
-https://docs.fedoraproject.org/en-US/quick-docs/postgresql/
+<https://docs.fedoraproject.org/en-US/quick-docs/postgresql/>
 
 Once you have your database server installed and running, connect using the
-``psql`` command line tool. You will first need to to this as the Postgres
-"superuser", named ``postgres``. Below is an example session; note that the
+`psql` command line tool. You will first need to to this as the Postgres
+"superuser", named `postgres`. Below is an example session; note that the
 statements that were executed are echoed after they succeed:
 
-.. code:: shell
+``` 
+$ sudo -u postgres psql
+# ... prompted for password ...
+psql (14.3)
+Type "help" for help.
 
-    $ sudo -u postgres psql
-    # prompt for password
-    psql (14.3)
-    Type "help" for help.
+postgres=# CREATE DATABASE archaia;
+CREATE DATABASE
+postgres=# CREATE ROLE archaia_admin NOINHERIT;
+CREATE ROLE
+postgres=# ALTER DATABASE archaia OWNER TO archaia_admin;
+ALTER DATABASE
+postgres=# GRANT archaia_admin TO {your user here};
+GRANT ROLE
+```
 
-    postgres=# CREATE DATABASE archaia;
-    CREATE DATABASE
-    postgres=# CREATE ROLE archaia_admin NOINHERIT;
-    CREATE ROLE
-    postgres=# ALTER DATABASE archaia OWNER TO archaia_admin;
-    ALTER DATABASE
-    postgres=# GRANT archaia_admin TO {your user here};
-    GRANT ROLE
-
-Here we are making use of Postgres' `role-based permissions model`_, by
+Here we are making use of Postgres' [role-based permissions model], by
 creating a database and a dedicated admin role for that database that has no
 other special permissions. In the final statement, we make our user (that is,
 the username you use on your operating system) a *member* of the
-``archaia_admin`` group, so that we can administer this database from our
+`archaia_admin` group, so that we can administer this database from our
 regular user account without creating a new special password. We could also
 make others members of this group, and remove them as appropriate.
 
 Now, we are ready to exit our superuser session and log back in:
 
-.. code:: shell
+```
+postgres=# \q
+$ psql -d archaia
+psql (14.3)
+Type "help" for help.
 
-    postgres=# \q
-    $ psql -d archaia
-    psql (14.3)
-    Type "help" for help.
-
-    archaia=>
+archaia=>
+```
 
 Once we have done this, we can now create the necessary tables to hold the
 "places" data we fetched from Pleiades. Please refer to the file
-``create_places_tables.sql`` in the ``sql/`` directory of this project.
+`create_places_tables.sql` in the ``sql/`` directory of this project.
 
-.. _role-based permissions model: https://www.postgresql.org/docs/14/user-manag.html
+[role-based permissions model]: https://www.postgresql.org/docs/14/user-manag.html
