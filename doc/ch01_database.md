@@ -47,6 +47,8 @@ Once we've retrieved these, we're ready for the next step.
 
 # Setting up the Database
 
+## Configuring Roles
+
 When starting out configuring your database, it's a good idea to think about
 your security model -- even if this is just a hobby project with public data.
 You don't want bad actors abusing your database. Again, in this example I will
@@ -71,7 +73,7 @@ statements that were executed are echoed after they succeed:
 
 ``` 
 $ sudo -u postgres psql
-# ... prompted for password ...
+  # ... prompted for password ...
 psql (14.3)
 Type "help" for help.
 
@@ -104,8 +106,45 @@ Type "help" for help.
 archaia=>
 ```
 
+[role-based permissions model]: https://www.postgresql.org/docs/14/user-manag.html
+
+## Creating Tables and Loading in Data
+
 Once we have done this, we can now create the necessary tables to hold the
 "places" data we fetched from Pleiades. Please refer to the file
 `create_places_tables.sql` in the ``sql/`` directory of this project.
 
-[role-based permissions model]: https://www.postgresql.org/docs/14/user-manag.html
+With the tables created, we can now load data into them using the `COPY`
+statement, or `psql`'s analogous `\copy` command (the latter of which
+typically bypasses permissions issues).
+
+```
+archaia=> \copy places from '/path/to/places.csv' with (format csv, header);
+COPY 38953
+archaia=> \copy places_types from '/path/to/place_types.csv' (format csv, header);
+COPY 180
+archaia=> \copy places_place_types from '/path/to/places_place_types.csv' (format csv, header);
+ERROR:  insert or update on table "places_place_types" violates foreign key constraint "places_place_types_place_type_fkey"
+DETAIL:  Key (place_type)=(quarry-group) is not present in table "places_types".
+```
+
+In our attempt to load data into the last table, we've run into an error; it
+looks like although we have a place with a "quarry-group" type, that type
+isn't in our "places_types" table. We can dig into this issue with a few
+shell commands on the CSV data.
+
+First, let's see how many records this impacts:
+
+```
+$ cat places_place_types.csv | grep 'quarry-group' | wc -l
+3
+```
+
+Ok, just three records -- not bad. We can drop those, or maybe we can find
+a close-enough type that would be appropriate?
+
+``` $ cat place_types.csv | grep '^quarry'
+quarry,quarry,A quarry as defined by
+the Getty Art and Architecture Thesaurus: Open-air excavations from which stone
+for building or other purposes is or has been obtained by cutting or blasting.
+```
