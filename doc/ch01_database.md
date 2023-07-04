@@ -27,15 +27,15 @@ available at this URL: <https://pleiades.stoa.org/downloads>
 
 For this project, we will use the [GIS package], and specifically the
 `"places*"` tables that it contains. For easy retrieval of the necessary tables,
-use the ``fetch_pleiades_places.sh`` script in the `scripts/` directory,
+use the `fetch_pleiades_places.sh` script in the `scripts/` directory,
 found in the root of this project.
 
 Running this script will leave three files in the working directory (described
 below as in the Pleiades README file):
 
-* ``places.csv``: Pleiades Places.
-* ``place_types.csv``: terms from the Place Types
-* ``places_place_types.csv``: matches place ids (join to places.csv:id)
+* `places.csv`: Pleiades Places.
+* `place_types.csv`: terms from the Place Types
+* `places_place_types.csv`: matches place ids (join to places.csv:id)
   to placetype ids (join to place_types.csv:key).
 
 Once we've retrieved these, we're ready for the next step.
@@ -71,7 +71,7 @@ Once you have your database server installed and running, connect using the
 "superuser", named `postgres`. Below is an example session; note that the
 statements that were executed are echoed after they succeed:
 
-``` 
+```
 $ sudo -u postgres psql
   # ... prompted for password ...
 psql (14.3)
