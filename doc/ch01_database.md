@@ -143,8 +143,34 @@ $ cat places_place_types.csv | grep 'quarry-group' | wc -l
 Ok, just three records -- not bad. We can drop those, or maybe we can find
 a close-enough type that would be appropriate?
 
-``` $ cat place_types.csv | grep '^quarry'
+```
+$ cat place_types.csv | grep '^quarry'
 quarry,quarry,A quarry as defined by
 the Getty Art and Architecture Thesaurus: Open-air excavations from which stone
 for building or other purposes is or has been obtained by cutting or blasting.
+```
+
+That seems close enough. Let's update those three records in our data file
+and try loading again:
+
+```
+$ sed 's/quarry-group/quarry/' places_place_types.csv > places_place_types1.csv
+$ fg
+psql -d archaia
+
+archaia=> \copy places_place_types from '/path/to/places_place_types1.csv' (format csv, header);
+ERROR:  insert or update on table "places_place_types" violates foreign key constraint "places_place_types_place_type_fkey"
+DETAIL:  Key (place_type)=(labeled feature) is not present in table "places_types".
+```
+
+Darn, we've hit another missing key. This one affects a higher number of
+records (more than 250), and there's nothing obviously analogous in the
+`place_types.csv` file. So let's drop the constraint, and move on:
+
+```
+archaia=> ALTER TABLE places_place_types
+archaia-> DROP CONSTRAINT places_place_types_place_type_fkey;
+ALTER TABLE
+archaia=> \copy places_place_types from '/home/bgh/projects/code/ancient-places/places_place_types1.csv' (format csv, header);
+COPY 43963
 ```
