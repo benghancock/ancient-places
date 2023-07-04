@@ -174,3 +174,28 @@ ALTER TABLE
 archaia=> \copy places_place_types from '/home/bgh/projects/code/ancient-places/places_place_types1.csv' (format csv, header);
 COPY 43963
 ```
+
+Now that we're set up, let's test our table setup with a query. (At this point,
+you may want to consider switching to a tool like [`pgadmin`] for running
+queries and viewing the output.)
+
+```sql
+SELECT
+  places.title,
+  places.id,
+  places_place_types.place_type,
+  places_types.definition
+FROM places
+  LEFT JOIN places_place_types
+  ON places.id = places_place_types.place_id
+  LEFT JOIN places_types
+  ON places_place_types.place_type = places_types.key
+ORDER BY places.title ASC
+LIMIT 200;
+```
+
+# Creating PostGIS 'Geometry' Columns
+
+# Importing Data from Natural Earth
+
+# Creating Views
