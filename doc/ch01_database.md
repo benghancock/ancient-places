@@ -196,6 +196,72 @@ this point, you may want to consider switching to a tool like
 
 # Creating PostGIS 'Geometry' Columns
 
+Next, we'll want to make sure that we have the PostGIS extension for
+Postgres installed and enabled; this will allow us to work with the
+geographical data in the Pleiades dataset. You can enable the
+extension using the `CREATE EXTENSION` statement.
+
+The first time I tried this, though, I ran into an error:
+
+	ancient_places=> CREATE EXTENSION postgis;
+	ERROR:  could not open extension control file "/usr/share/pgsql/extension/postgis.control": No such file or directory
+
+I found that several standalone packages were provided for PostGIS
+by Fedora's package manager, and installed them:
+
+	$ sudo dnf install postgis postgis-docs postgis-upgrade postgis-utils
+
+Now, running the create extension statement works, though note that
+you must be the database superuser (by default, `postgres`) in order
+to successfully execute it. To check the version of PostGIS installed,
+execute this statement:
+
+	SELECT postgis_full_version();
+
+Throughout this document, I'm running PostGIS 3.2.2.
+
+TODO: Add section on geography vs. geometry
+https://www.postgis.net/workshops/postgis-intro/geography.html#why-not-use-geography
+
+::: Note
+
+**A Word (or Two) About Spatial Reference Systems**
+
+One important concept when working with spatial data is the idea of
+*coordinates systems*, or *spatial reference systems*. Explained
+simply, these are systems that humans can use to reflect the
+location of places on the earth on a map. As expressed more artfully
+by the [PostGIS documentation](https://www.postgis.net/workshops/postgis-intro/projection.html):
+
+> The earth is not flat, and there is no simple way of putting it down
+> on a flat paper map (or computer screen), so people have come up
+> with all sorts of ingenious solutions, each with pros and cons. Some
+> projections preserve area, so all objects have a relative size to
+> each other; other projections preserve angles (conformal) like the
+> Mercator projection; some projections try to find a good
+> intermediate mix with only little distortion on several
+> parameters. Common to all projections is that they transform the
+> (spherical) world onto a flat Cartesian coordinate system, and which
+> projection to choose depends on how you will be using the data.
+
+The thing to underline here is that, when working with geographic
+data, you should know which spatial reference system it uses. In
+PostGIS and other GIS systems, these are referred by their spatial
+reference identifier (SRID). More on that here:
+
+<https://postgis.net/workshops/postgis-intro/loading_data.html#srid-26918-what-s-with-that>
+
+Setting the appropriate SRID ensures that when using spatial functions
+to calculate distance, etc., your results will be correct. This is
+even more important when working with data that utilizes different
+spatial reference systems. The most common SRID for geopgraphic
+coordinates is SRID 4326, which corresponds to “longitude/latitude on
+the WGS84 spheroid” [^1]. Luckily that's what all of our data uses
+throughout these exercises.
+
+:::
+
+
 # Importing Data from Natural Earth
 
 # Creating Views
