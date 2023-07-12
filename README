@@ -1,0 +1,37 @@
+README: Ancient Places Search
+=================================
+
+Author: Ben Hancock
+Last Update: Summer 2023
+
+
+About
+-----
+
+This project leverages data on archaelogical sites from [Pleiades]
+and geographical data from [Natural Earth] to make it possible to
+search for places of historical significance by country. Pleiades
+offers robust search already, but this is one missing feature.
+
+This project is undertaken mainly for personal learning and
+experimentation, and is publicly shared in case anyone interested in
+the underlying data sets or the technologies used may benefit. It
+is a work in progress ...
+
+[Pleiades]: https://pleiades.stoa.org
+[Natural Earth]: https://www.naturalearthdata.com
+
+
+Getting Started
+---------------
+
+For information on how to use this repository, check the files in
+the `doc/` directory. Each is a plain text file following Markdown
+formatting conventions, and so can be read in your favorite editor
+or converted to HTML for viewing in the browser using a tool such
+as `pandoc`. This documentation is intended to be a guide as well
+as a sort of journal for how this project was developed, and so may
+contain inconsistencies or misunderstandings.
+
+
+// END //
