@@ -240,8 +240,14 @@ SELECT postgis_full_version();
 
 Throughout this document, I'm running PostGIS 3.2.2.
 
-TODO: Add section on geography vs. geometry
-https://www.postgis.net/workshops/postgis-intro/geography.html#why-not-use-geography
+The next thing for us to do is to create columns for the data using one
+of PostGIS' supported geospatial data types. There are two main types
+to choose from: `geography` and `geometry`. The PostGIS documentation
+on [why to choose one over the other] is helpful on this topic, but to briefly
+paraphrase: the `geography` type is appropriate for geographically dispersed
+data, whereas `geometry` is generally appropriate for more geographically
+compact data. That said, PostGIS offers some useful functions for dealing
+with `geometry` data, and casting from one to the other is trivial.
 
 ::: Note
 
@@ -281,6 +287,23 @@ throughout these exercises.
 
 :::
 
+We will use the representative lat/lon coordinates in our `places` table
+in order to construct a column of the `geography` data type.
+
+``` sql
+ALTER TABLE places
+ADD COLUMN repr_geog geography(POINT, 4326);
+
+UPDATE places
+SET repr_geog =
+  ST_SetSRID(
+    ST_MakePoint(representative_longitude, representative_latitude),
+    4326)::geography;
+```
+
+[why to choose one over the other]: https://www.postgis.net/workshops/postgis-intro/geography.html#why-not-use-geography
+
+[^1]: https://www.postgis.net/workshops/postgis-intro/projection.html#transforming-data
 
 # Importing Data from Natural Earth
 
