@@ -86,7 +86,7 @@ Once you have your database server installed and running, connect using the
 "superuser", named `postgres`. Below is an example session; note that the
 statements that were executed are echoed after they succeed:
 
-``` shell
+```
 $ sudo -u postgres psql
 # ... prompted for password ...
 psql (14.3)
@@ -113,7 +113,7 @@ them as appropriate.
 
 Now, we are ready to exit our superuser session and log back in:
 
-``` shell
+```
 postgres=# \q
 $ psql -d archaia
 psql (14.3)
@@ -134,7 +134,7 @@ With the tables created, we can now load data into them using the
 `COPY` statement, or `psql`'s analogous `\copy` command (the latter of
 which typically bypasses permissions issues).
 
-``` shell
+```
 archaia=> \copy places from '/path/to/places.csv' with (format csv, header);
 COPY 38953
 archaia=> \copy places_types from '/path/to/place_types.csv' (format csv, header);
@@ -151,7 +151,7 @@ shell commands on the CSV data.
 
 First, let's see how many records this impacts:
 
-``` shell
+```
 $ cat places_place_types.csv | grep 'quarry-group' | wc -l
 3
 ```
@@ -159,7 +159,7 @@ $ cat places_place_types.csv | grep 'quarry-group' | wc -l
 Ok, just three records -- not bad. We can drop those, or maybe we can find
 a close-enough type that would be appropriate?
 
-``` shell
+```
 $ cat place_types.csv | grep '^quarry'
 quarry,quarry,A quarry as defined by the Getty Art and Architecture Thesaurus: Open-air excavations from which stone for building or other purposes is or has been obtained by cutting or blasting.
 ```
@@ -167,7 +167,7 @@ quarry,quarry,A quarry as defined by the Getty Art and Architecture Thesaurus: O
 That seems close enough. Let's update those three records in our data file
 and try loading again:
 
-``` shell
+```
 $ sed 's/quarry-group/quarry/' places_place_types.csv > places_place_types1.csv
 $ fg
 psql -d archaia
@@ -181,7 +181,7 @@ Darn, we've hit another missing key. This one affects a higher number
 of records (more than 250), and there's nothing obviously analogous in
 the `place_types.csv` file. So let's drop the constraint, and move on:
 
-``` shell
+```
 archaia=> ALTER TABLE places_place_types
 archaia-> DROP CONSTRAINT places_place_types_place_type_fkey;
 ALTER TABLE
@@ -217,7 +217,7 @@ extension using the `CREATE EXTENSION` statement.
 
 The first time I tried this, though, I ran into an error:
 
-``` shell
+```
 ancient_places=> CREATE EXTENSION postgis;
 ERROR:  could not open extension control file "/usr/share/pgsql/extension/postgis.control": No such file or directory
 ```
@@ -225,7 +225,7 @@ ERROR:  could not open extension control file "/usr/share/pgsql/extension/postgi
 I found that several standalone packages were provided for PostGIS
 by Fedora's package manager, and installed them:
 
-``` shell
+```
 $ sudo dnf install postgis postgis-docs postgis-upgrade postgis-utils
 ```
 
@@ -234,7 +234,7 @@ you must be the database superuser (by default, `postgres`) in order
 to successfully execute it. To check the version of PostGIS installed,
 execute this statement:
 
-``` shell
+``` sql
 SELECT postgis_full_version();
 ```
 
