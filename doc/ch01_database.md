@@ -394,11 +394,79 @@ CREATE INDEX places_repr_geog_idx ON places
 USING GIST (repr_geog);
 ```
 
+Now we're ready to join our tables in a way that provides all the data
+we need for our service.
 
 [shapefile]: https://en.wikipedia.org/wiki/Shapefile
 [`ST_Intersects`]: https://postgis.net/docs/manual-dev/en/ST_Intersects.html
 [`ST_Contains`]: https://postgis.net/docs/manual-dev/en/ST_Contains.html
 
-# Creating Views
+# Optimizing Our Data for Querying
 
-TODO
+Our full query will be a bit complex, since we need to perform
+multiple joins and also cast our `geography` type to a `geometry` type
+in order to use the proper function. Here we go:
+
+```
+SELECT
+	cp.sovereignt as country_name,
+	pt.place_id,
+	pt.place_name,
+	pt.pleiades_uri,
+	pt.place_type,
+	pt.place_type_def,
+	pt.descrip,
+	pt.repr_lon,
+	pt.repr_lat
+FROM (
+	SELECT
+		places.id as place_id,
+		places.repr_geog as place_geog,
+		places.title as place_name,
+		places.description as descrip,
+		places.uri as pleiades_uri,
+		places.representative_longitude as repr_lon,
+		places.representative_latitude as repr_lat,
+		places_place_types.place_type,
+		places_types.definition as place_type_def
+	FROM places LEFT JOIN places_place_types
+	ON places.id = places_place_types.place_id
+	LEFT JOIN places_types
+	ON places_place_types.place_type = places_types.key
+	ORDER BY places.title ASC
+) as pt
+LEFT JOIN
+	countries_political cp
+ON ST_Intersects(
+	cp.geom,
+	pt.place_geog::geometry
+)
+WHERE pt.place_geog IS NOT NULL
+ORDER BY cp.sovereignt ASC;
+```
+
+On my laptop, this query takes just over a minute to complete, which is
+not terrible. But this is a complex query we don't want to have to
+re-type often, and if we're going to be querying *this* data, we'll want
+to have it go much quicker. So let's create a [materialized view] of
+this result, and then put an index on the "country_name" column:
+
+```
+CREATE MATERIALIZED VIEW IF NOT EXISTS countries_places AS
+-- ... long query above goes here
+
+CREATE INDEX country_name_lower_idx ON countries_places ((lower(country_name)));
+```
+
+Now, a query like this runs in about 100ms, bringing back ~2,800 records.
+
+```
+SELECT * FROM countries_places
+WHERE lower(country_name) LIKE 'greece';
+```
+
+Pretty neat! That concludes the database setup portion of the
+documentation. Next, we'll work on building the application that
+exposes a search API for our database.
+
+[materialized view]: https://www.postgresql.org/docs/current/sql-creatematerializedview.html
