@@ -360,8 +360,44 @@ We're now almost ready to do a join with our Pleiades `places` table, in
 order to place the sites in the modern-day borders where they can now
 be found. But a couple additional considerations need to be made first.
 
-[shapefile]: https://en.wikipedia.org/wiki/Shapefile
+First, we should consider that these places may often *not* fall
+neatly within current-day geopolitical borders. It's always possible
+that they could fall _on_ a border, and we would like to at least try
+to accomodate this scenario.
 
+This means that our places may have a one-to-many relationship with
+our countries data, and we should choose a join method that would
+support this. Furthermore, in line with the Pleiades note that places
+are often "conceptual" rather than actual mappable points on the
+earth, it follows that many "places" will actually not have
+coordinates at all, and thus won't fall into a "country" as such --
+though they may have cultural ties to actual, geographic locations.
+
+In practical terms, this means that we probably want to use the
+PostGIS function [`ST_Intersects`] to perform our join, rather than
+[`ST_Contains`], since we will want to join places on all of the
+countries that they may touch. Even this is not perfect ; Pleiades'
+cautions that often the coordinates given may just be the centroid of
+a very large bounding box covering a large area. Some of the places
+are also along roads or routes that traverse long distances.
+
+Before we give this a try, we'll also want to create indexes on our
+spatial data columns, in order to make our query reasonably
+performant, and also make sure that we set the SRID for the `geom`
+column from the Natural Earth Data.
+
+``` sql
+CREATE INDEX countries_geom_idx ON countries_political
+USING GIST (geom);
+
+CREATE INDEX places_repr_geog_idx ON places
+USING GIST (repr_geog);
+```
+
+
+[shapefile]: https://en.wikipedia.org/wiki/Shapefile
+[`ST_Intersects`]: https://postgis.net/docs/manual-dev/en/ST_Intersects.html
+[`ST_Contains`]: https://postgis.net/docs/manual-dev/en/ST_Contains.html
 
 # Creating Views
 
