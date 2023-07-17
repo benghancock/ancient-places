@@ -307,4 +307,62 @@ SET repr_geog =
 
 # Importing Data from Natural Earth
 
+Now that we have our data on archaeological sites in the shape we want
+it, we need to import data on modern-day geopolitical borders in order
+to support our goal of enabling search by country. For this, I found
+the "Cultural Vectors" data from Natural Earth to fit the bill:
+
+<https://www.naturalearthdata.com/downloads/10m-cultural-vectors/>
+
+Specifically, I downloaded the "Admin 0 - Countries" dataset. Country
+boundaries are, of course, a political construct and may be fluid or
+disputed. To this point, Natural Earth notes that it "shows de facto
+boundaries by default according to who controls the territory, versus
+de jure." (It also offers "point-of-view" border data.)
+
+This dataset is offered as a [shapefile], and so to import it into
+Postgres, we'll want to use a tool called `shp2pgsql`. This is a
+command-line tool that is probably included with the `postgis-client`
+package in your package manager. This tool has a lot of command-line
+options, and it's worth exploring them by running `shp2pgsql -?`. But
+for our use-case, no flags are necessary:
+
+```
+$ wget 'https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_countries.zip'
+$ unzip ne_10m_admin_0_countries.zip
+$ shp2pgsql ne_10m_admin_0_countries.shp countries_political | psql -d archaia
+```
+
+You'll see a lot of output fly by in your terminal as the data is
+loaded into a new table in the `archaia` database, called
+`countries_political`. Back in your query tool (either pgadmin or
+psql), you can get information on this new table like so:
+
+``` sql
+SELECT column_name
+FROM information_schema.columns
+WHERE table_name = 'countries_political';
+```
+
+There are *a lot* of columns in this dataset, but there are really
+only two that we need to be concerned with for now: `sovereignt`
+and `geom`, which are the names of the countries (in English) and
+their geometries, respectively. Take a quick look:
+
+``` sql
+SELECT sovereignt, geom
+FROM countries_political
+ORDER BY sovereignt ASC
+LIMIT 10;
+```
+
+We're now almost ready to do a join with our Pleiades `places` table, in
+order to place the sites in the modern-day borders where they can now
+be found. But a couple additional considerations need to be made first.
+
+[shapefile]: https://en.wikipedia.org/wiki/Shapefile
+
+
 # Creating Views
+
+TODO
