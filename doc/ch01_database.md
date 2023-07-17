@@ -409,37 +409,37 @@ in order to use the proper function. Here we go:
 
 ``` sql
 SELECT
-	cp.sovereignt as country_name,
-	pt.place_id,
-	pt.place_name,
-	pt.pleiades_uri,
-	pt.place_type,
-	pt.place_type_def,
-	pt.descrip,
-	pt.repr_lon,
-	pt.repr_lat
+    cp.sovereignt as country_name,
+    pt.place_id,
+    pt.place_name,
+    pt.pleiades_uri,
+    pt.place_type,
+    pt.place_type_def,
+    pt.descrip,
+    pt.repr_lon,
+    pt.repr_lat
 FROM (
-	SELECT
-		places.id as place_id,
-		places.repr_geog as place_geog,
-		places.title as place_name,
-		places.description as descrip,
-		places.uri as pleiades_uri,
-		places.representative_longitude as repr_lon,
-		places.representative_latitude as repr_lat,
-		places_place_types.place_type,
-		places_types.definition as place_type_def
-	FROM places LEFT JOIN places_place_types
-	ON places.id = places_place_types.place_id
-	LEFT JOIN places_types
-	ON places_place_types.place_type = places_types.key
-	ORDER BY places.title ASC
+    SELECT
+        places.id as place_id,
+        places.repr_geog as place_geog,
+        places.title as place_name,
+        places.description as descrip,
+        places.uri as pleiades_uri,
+        places.representative_longitude as repr_lon,
+        places.representative_latitude as repr_lat,
+        places_place_types.place_type,
+        places_types.definition as place_type_def
+    FROM places LEFT JOIN places_place_types
+    ON places.id = places_place_types.place_id
+    LEFT JOIN places_types
+    ON places_place_types.place_type = places_types.key
+    ORDER BY places.title ASC
 ) as pt
 LEFT JOIN
-	countries_political cp
+    countries_political cp
 ON ST_Intersects(
-	cp.geom,
-	pt.place_geog::geometry
+    cp.geom,
+    pt.place_geog::geometry
 )
 WHERE pt.place_geog IS NOT NULL
 ORDER BY cp.sovereignt ASC;
