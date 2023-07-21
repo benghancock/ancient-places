@@ -52,12 +52,13 @@ psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" 
 ```
 
 Ah! We haven't yet configured our database server to accept
-password-based authentication. We can do this in Postgres using the
-file [`pg_hba.conf`]. Where this is on your system will vary by
-install; on Fedora it should be at `/var/lib/pgsql/data/pg_hba.conf`
-(see [more Fedora docs here]). The file itself is pretty well
-commented, but consult the Postgres documentation for the specifics on
-the formatting. We'll add a line like this:
+password-based authentication, at least not for local socket
+connections. We can do this in Postgres by editing the file
+[`pg_hba.conf`]. Where this is on your system will vary by install; on
+Fedora it should be at `/var/lib/pgsql/data/pg_hba.conf` (see [more
+Fedora docs here]). The file itself is pretty well-commented, but
+consult the Postgres documentation for the specifics on the
+formatting. We'll add a line like this:
 
 ```
 # "local" is for Unix domain socket connections only
