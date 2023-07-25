@@ -13,8 +13,6 @@ import (
 var db *sql.DB
 
 func main() {
-	var placeNames []string
-
 	dbUser := os.Getenv("DBUSER")
 	dbPass := os.Getenv("DBPASSWORD")
 	connStr := fmt.Sprintf("user=%s password=%s dbname=archaia sslmode=disable\n", dbUser, dbPass)
@@ -29,23 +27,32 @@ func main() {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Connected to archaia!")
+	counts := queryCountryCounts(db)
+	for countryName, placeCount := range counts {
+		fmt.Printf("%s\t%d\n", countryName, placeCount)
+	}
+}
 
-	rows, err := db.Query("SELECT place_name FROM countries_places WHERE lower(country_name) = 'greece' LIMIT 1;")
+func queryCountryCounts(db *sql.DB) map[string]int {
+	var counts = make(map[string]int)
+	q := `
+		SELECT
+			COALESCE(country_name, '(unknown)'),
+			COUNT(DISTINCT(place_id)) AS place_count
+		FROM countries_places
+		GROUP BY country_name;
+`
+	rows, err := db.Query(q)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer rows.Close()
-
 	for rows.Next() {
-		var placeName string
-		if err := rows.Scan(&placeName); err != nil {
+		var countryName string
+		var placeCount int
+		if err := rows.Scan(&countryName, &placeCount); err != nil {
 			log.Fatal(err)
 		}
-		placeNames = append(placeNames, placeName)
+		counts[countryName] = placeCount
 	}
-	fmt.Println("Places")
-	fmt.Println("------")
-	for _, name := range placeNames {
-		fmt.Println(name)
-	}
+	return counts
 }
