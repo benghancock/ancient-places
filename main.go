@@ -8,6 +8,7 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"os"
+	"sort"
 )
 
 var db *sql.DB
@@ -26,10 +27,17 @@ func main() {
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
-	fmt.Println("Connected to archaia!")
+	log.Println("Connected to archaia!")
 	counts := queryCountryCounts(db)
-	for countryName, placeCount := range counts {
-		fmt.Printf("%s\t%d\n", countryName, placeCount)
+	keys := make([]string, 0, len(counts))
+	for k := range counts {
+		keys = append(keys, k)
+	}
+	sort.SliceStable(keys, func(i, j int) bool {
+		return counts[keys[i]] > counts[keys[j]]
+	})
+	for _, k := range keys {
+		fmt.Printf("%s\t%d\n", k, counts[k])
 	}
 }
 
