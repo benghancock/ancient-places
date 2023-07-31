@@ -16,9 +16,12 @@ var db *sql.DB
 func main() {
 	dbUser := os.Getenv("DBUSER")
 	dbPass := os.Getenv("DBPASSWORD")
-	connStr := fmt.Sprintf("user=%s password=%s dbname=archaia sslmode=disable\n", dbUser, dbPass)
+	dsn := fmt.Sprintf(
+		"user=%s password=%s dbname=archaia sslmode=disable\n",
+		dbUser,
+		dbPass)
 
-	db, err := sql.Open("postgres", connStr)
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
