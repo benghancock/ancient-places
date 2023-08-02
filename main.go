@@ -31,6 +31,7 @@ func main() {
 		log.Fatal(pingErr)
 	}
 	log.Println("Connected to archaia!")
+
 	counts := queryCountryCounts(db)
 	keys := make([]string, 0, len(counts))
 	for k := range counts {
@@ -41,6 +42,15 @@ func main() {
 	})
 	for _, k := range keys {
 		fmt.Printf("%s\t%d\n", k, counts[k])
+	}
+
+	country := "greece"
+	places := queryCountryPlaces(db, country)
+	for _, place := range(places) {
+		fmt.Println(place)
+	}
+	if len(places) == 0 {
+		fmt.Println("No matching places found!")
 	}
 }
 
@@ -66,4 +76,27 @@ func queryCountryCounts(db *sql.DB) map[string]int {
 		counts[countryName] = placeCount
 	}
 	return counts
+}
+
+// queryCountryPlaces returns a slice of place names found
+// within the given country name
+func queryCountryPlaces (db *sql.DB, name string) []string {
+	var matchPlaces []string
+	q := `
+		SELECT place_name
+		FROM countries_places
+		WHERE country_name ILIKE $1;
+`
+	rows, err := db.Query(q, name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for rows.Next() {
+		var placeName string
+		if err := rows.Scan(&placeName); err != nil {
+			log.Fatal(err)
+		}
+		matchPlaces = append(matchPlaces, placeName)
+	}
+	return matchPlaces
 }
