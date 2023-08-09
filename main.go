@@ -12,6 +12,13 @@ import (
 
 var db *sql.DB
 
+type PleiadesPlace struct {
+	name	string
+	country	string
+	placeType	string
+	description	string
+}
+
 func main() {
 	dbUser := os.Getenv("DBUSER")
 	dbPass := os.Getenv("DBPASSWORD")
@@ -34,7 +41,7 @@ func main() {
 	country := "gree"
 	places := queryCountryPlaces(db, country)
 	for _, place := range(places) {
-		fmt.Println(place)
+		fmt.Printf("%s\t%s\n", place.name, place.description)
 	}
 	if len(places) == 0 {
 		fmt.Println("No matching places found!")
@@ -65,12 +72,11 @@ func queryCountryCounts(db *sql.DB) map[string]int {
 	return counts
 }
 
-// queryCountryPlaces returns a slice of place names found
-// within the given country name
-func queryCountryPlaces (db *sql.DB, name string) []string {
-	var matchPlaces []string
+// queryCountryPlaces returns a slice of matching PleiadesPlaces
+func queryCountryPlaces (db *sql.DB, name string) []PleiadesPlace {
+	var matchPlaces []PleiadesPlace
 	q := `
-		SELECT place_name
+		SELECT place_name, country_name, place_type, descrip
 		FROM countries_places
 		WHERE country_name ILIKE '%' || $1 || '%';
 	`
@@ -79,11 +85,11 @@ func queryCountryPlaces (db *sql.DB, name string) []string {
 		log.Fatal(err)
 	}
 	for rows.Next() {
-		var placeName string
-		if err := rows.Scan(&placeName); err != nil {
+		var place PleiadesPlace
+		if err := rows.Scan(&place.name, &place.country, &place.placeType, &place.description); err != nil {
 			log.Fatal(err)
 		}
-		matchPlaces = append(matchPlaces, placeName)
+		matchPlaces = append(matchPlaces, place)
 	}
 	return matchPlaces
 }
