@@ -8,7 +8,6 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"os"
-	"sort"
 )
 
 var db *sql.DB
@@ -32,19 +31,7 @@ func main() {
 	}
 	log.Println("Connected to archaia!")
 
-	counts := queryCountryCounts(db)
-	keys := make([]string, 0, len(counts))
-	for k := range counts {
-		keys = append(keys, k)
-	}
-	sort.SliceStable(keys, func(i, j int) bool {
-		return counts[keys[i]] > counts[keys[j]]
-	})
-	for _, k := range keys {
-		fmt.Printf("%s\t%d\n", k, counts[k])
-	}
-
-	country := "greece"
+	country := "gree"
 	places := queryCountryPlaces(db, country)
 	for _, place := range(places) {
 		fmt.Println(place)
@@ -85,8 +72,8 @@ func queryCountryPlaces (db *sql.DB, name string) []string {
 	q := `
 		SELECT place_name
 		FROM countries_places
-		WHERE country_name ILIKE $1;
-`
+		WHERE country_name ILIKE '%' || $1 || '%';
+	`
 	rows, err := db.Query(q, name)
 	if err != nil {
 		log.Fatal(err)
