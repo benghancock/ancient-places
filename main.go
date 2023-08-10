@@ -8,15 +8,23 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"os"
+    "net/http"
+
+    "github.com/labstack/echo/v4"
 )
 
 var db *sql.DB
 
+type SearchResult struct {
+	Count	int	`json:count`
+	Results	[]PleiadesPlace `json:results`
+}
+
 type PleiadesPlace struct {
-	name	string
-	country	string
-	placeType	string
-	description	string
+	Name	string	`json:name`
+	Country	string	`json:country`
+	PlaceType	string	`json:placeType`
+	Description	string	`json:description`
 }
 
 func main() {
@@ -38,15 +46,20 @@ func main() {
 	}
 	log.Println("Connected to archaia!")
 
-	country := "gree"
-	places := queryCountryPlaces(db, country)
-	for _, place := range(places) {
-		fmt.Printf("%s\t%s\n", place.name, place.description)
-	}
-	if len(places) == 0 {
-		fmt.Println("No matching places found!")
-	}
+	e := echo.New()
+	e.GET("/search", searchPlaces)
+	e.Logger.Fatal(e.Start(":1323"))
 }
+
+func searchPlaces(c echo.Context) error {
+	result := new(SearchResult)
+	country := c.QueryParam("country")
+	places := queryCountryPlaces(db, country)
+	result.Count = len(places)
+	result.Results = places
+	return c.JSON(http.StatusOK, result)
+}
+
 
 func queryCountryCounts(db *sql.DB) map[string]int {
 	var counts = make(map[string]int)
