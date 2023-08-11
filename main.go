@@ -16,16 +16,16 @@ import (
 var db *sql.DB
 
 type SearchResult struct {
-	Count   int             `json:count`
-	Results []PleiadesPlace `json:results`
+	Count   int             `json:"count"`
+	Results []PleiadesPlace `json:"results"`
 }
 
 type PleiadesPlace struct {
-	Name        string `json:name`
-	Country     string `json:country`
-	PlaceType   string `json:placeType`
-	Description string `json:description`
-	URI			string `json:pleiadesURL`
+	Name        string `json:"name"`
+	Country     string `json:"country"`
+	PlaceType   string `json:"placeType"`
+	Description string `json:"description"`
+	URI			string `json:"pleiadesURL"`
 }
 
 func main() {
