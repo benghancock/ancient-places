@@ -25,6 +25,7 @@ type PleiadesPlace struct {
 	Country     string `json:country`
 	PlaceType   string `json:placeType`
 	Description string `json:description`
+	URI			string `json:pleiadesURL`
 }
 
 func main() {
@@ -64,7 +65,8 @@ func queryCountryPlaces(db *sql.DB, name string) []PleiadesPlace {
 			place_name,
 			country_name,
 			place_type,
-			COALESCE(descrip, '')
+			COALESCE(descrip, ''),
+			pleiades_uri
 		FROM countries_places
 		WHERE country_name ILIKE '%' || $1 || '%';
 	`
@@ -76,7 +78,13 @@ func queryCountryPlaces(db *sql.DB, name string) []PleiadesPlace {
 
 	for rows.Next() {
 		var place PleiadesPlace
-		if err := rows.Scan(&place.Name, &place.Country, &place.PlaceType, &place.Description); err != nil {
+		if err := rows.Scan(
+			&place.Name,
+			&place.Country,
+			&place.PlaceType,
+			&place.Description,
+			&place.URI,
+		); err != nil {
 			log.Fatal(err)
 		}
 		matchPlaces = append(matchPlaces, place)
