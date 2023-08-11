@@ -72,6 +72,8 @@ func queryCountryPlaces(db *sql.DB, name string) []PleiadesPlace {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer rows.Close()
+
 	for rows.Next() {
 		var place PleiadesPlace
 		if err := rows.Scan(&place.Name, &place.Country, &place.PlaceType, &place.Description); err != nil {
