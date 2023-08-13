@@ -4,7 +4,7 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
+	"encoding/json"
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
@@ -14,6 +14,10 @@ import (
 )
 
 var db *sql.DB
+
+type Config struct {
+	DSN string `json:"dsn"`
+}
 
 type SearchResult struct {
 	Count   int             `json:"count"`
@@ -25,17 +29,19 @@ type PleiadesPlace struct {
 	Country     string `json:"country"`
 	PlaceType   string `json:"placeType"`
 	Description string `json:"description"`
-	URI			string `json:"pleiadesURL"`
+	URI         string `json:"pleiadesURL"`
 }
 
 func main() {
-	dbUser := os.Getenv("DBUSER")
-	dbPass := os.Getenv("DBPASSWORD")
-	dsn := fmt.Sprintf(
-		"user=%s password=%s dbname=archaia sslmode=disable\n",
-		dbUser,
-		dbPass,
-	)
+	configFile, err := os.Open("conf.json")
+	if err != nil {
+		log.Fatal("Error loading config file")
+	}
+	defer configFile.Close()
+	decoder := json.NewDecoder(configFile)
+	conf := Config{}
+	decoder.Decode(&conf)
+	dsn := conf.DSN
 
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
