@@ -52,6 +52,7 @@ func main() {
 	db.SetMaxOpenConns(50)
 
 	e := echo.New()
+	e.File("/", "public/index.html")
 	e.GET("/search", func(c echo.Context) error {
 		result := new(SearchResult)
 		country := c.QueryParam("country")
