@@ -1,0 +1,10 @@
+{{define "results"}}
+
+<p>{{.Count}} total results</p>
+
+{{ range .Results }}
+<p> {{ .Name }} </p>
+{{ end }}
+
+
+{{end}}

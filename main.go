@@ -6,6 +6,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	_ "github.com/lib/pq"
+	"html/template"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -32,6 +34,14 @@ type PleiadesPlace struct {
 	URI         string `json:"pleiadesURL"`
 }
 
+type Template struct {
+	templates *template.Template
+}
+
+func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
+}
+
 func main() {
 	configFile, err := os.Open("conf.json")
 	if err != nil {
@@ -51,16 +61,24 @@ func main() {
 	db.SetMaxIdleConns(50)
 	db.SetMaxOpenConns(50)
 
+	t := &Template{
+		templates: template.Must(template.ParseGlob("public/views/*.html")),
+	}
+
 	e := echo.New()
+	e.Renderer = t
+
 	e.File("/", "public/index.html")
+
 	e.GET("/search", func(c echo.Context) error {
 		result := new(SearchResult)
 		country := c.QueryParam("country")
 		places := queryCountryPlaces(db, country)
 		result.Count = len(places)
 		result.Results = places
-		return c.JSON(http.StatusOK, result)
+		return c.Render(http.StatusOK, "results", result)
 	})
+
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
