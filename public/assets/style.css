@@ -1,5 +1,14 @@
 body {
+	background-color: lightblue;
+}
+
+form {
+	display: inline-block;
+}
+
+.content {
 	max-width: 800px;
 	padding: 10px;
-	background-color: lightblue;
+	margin: auto;
+	text-align: center;
 }
