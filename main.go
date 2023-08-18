@@ -69,6 +69,7 @@ func main() {
 	e.Renderer = t
 
 	e.File("/", "public/index.html")
+	e.Static("/static", "public/assets")
 
 	e.GET("/search", func(c echo.Context) error {
 		result := new(SearchResult)
