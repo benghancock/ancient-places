@@ -1,5 +1,5 @@
-// package main connects to the archaia database and does the work
-// this is a work in progress ...
+// package main connects to the archaia database and serves a search page
+// over HTTP allowing a user search for places by country name
 package main
 
 import (
