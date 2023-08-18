@@ -1,0 +1,30 @@
+Project TODOs
+-----------------
+
+DATABASE
+* TODO Update view to use WKT instead of lat/lon
+
+APPLICATION
+* DONE Integrate 'echo' and build endpoints
+* DONE Clean up handling of credentials (load from config)
+* DONE Return results as JSON
+* TODO See if I can move the query to another function
+* TODO Build listing endpoint
+* TODO Use "context" to manage the query
+* TODO Incorporate pagination
+
+FRONT END
+* DONE Build basic HTML template for search and results
+* DONE Create stylesheet
+* DONE Style home page
+* TODO Add results to table
+* TODO Create base template
+
+DOCUMENTATION
+* TODO Update README with more information on getting started
+* TODO Write out application build doc
+* TODO Reorganize repository
+
+DEPLOYMENT
+* TODO Research how to deploy the project (maybe using glitch?)
+* TODO Move data to sqlite
