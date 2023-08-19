@@ -5,14 +5,15 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	_ "github.com/lib/pq"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
+	_ "github.com/lib/pq"
 )
 
 var db *sql.DB
@@ -80,7 +81,12 @@ func main() {
 	e.GET("/search", func(c echo.Context) error {
 		result := new(SearchResult)
 		country := c.QueryParam("country")
-		places := queryCountryPlaces(db, country)
+		page, err := strconv.Atoi(c.QueryParam("page"))
+		if err != nil {
+			page = 0
+		}
+
+		places := queryCountryPlaces(db, country, page)
 
 		result.SearchString = country
 		result.Count = len(places)
@@ -93,8 +99,11 @@ func main() {
 }
 
 // queryCountryPlaces returns a slice of matching PleiadesPlaces
-func queryCountryPlaces(db *sql.DB, name string) []PleiadesPlace {
+func queryCountryPlaces(db *sql.DB, name string, page int) []PleiadesPlace {
 	var matchPlaces []PleiadesPlace
+
+	pageSize := 20
+	offset := pageSize * page
 	q := `
 		SELECT
 			place_name,
@@ -104,9 +113,10 @@ func queryCountryPlaces(db *sql.DB, name string) []PleiadesPlace {
 			pleiades_uri
 		FROM countries_places
 		WHERE country_name ILIKE '%' || $1 || '%'
-		ORDER BY place_name ASC;
+		ORDER BY place_name ASC
+		LIMIT $2 OFFSET $3;
 	`
-	rows, err := db.Query(q, name)
+	rows, err := db.Query(q, name, pageSize, offset)
 	if err != nil {
 		log.Fatal(err)
 	}
