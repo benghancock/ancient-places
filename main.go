@@ -86,16 +86,30 @@ func main() {
 			page = 0
 		}
 
+		matchCount := queryMatchCount(db, country)
 		places := queryCountryPlaces(db, country, page)
 
 		result.SearchString = country
-		result.Count = len(places)
+		result.Count = matchCount
 		result.Results = places
 
 		return c.Render(http.StatusOK, "base", result)
 	})
 
 	e.Logger.Fatal(e.Start(":1323"))
+}
+
+// queryMatchCount returns a count of matching place results
+func queryMatchCount(db *sql.DB, name string) int {
+	var count int
+	q := `
+		SELECT COUNT(place_name)
+		FROM countries_places
+		WHERE country_name ILIKE '%' || $1 || '%'
+	`
+	row := db.QueryRow(q, name)
+	row.Scan(&count)
+	return count
 }
 
 // queryCountryPlaces returns a slice of matching PleiadesPlaces
