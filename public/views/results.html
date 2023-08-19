@@ -3,7 +3,10 @@
   <p>{{.Count}} total results</p>
 
   {{ range .Results }}
-    <p> {{ .Name }} </p>
+	<dl>
+	  <dt><a href="{{.URI}}">{{ .Name }}</a></dt>
+	  <dd>{{.Description}}</dd>
+	</dl>
   {{ end }}
 
 {{end}}
