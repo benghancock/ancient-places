@@ -9,4 +9,13 @@
 	</dl>
   {{ end }}
 
+	<form action="/search" method="get">
+	  <p>
+		<input type="hidden" id="country" name="country" value="{{.SearchString}}" />
+		<input type="hidden" id="nextPage" name="page" value="{{.NextPage}}" />
+		<button type="submit">Next Page</button>
+	  </p>
+	</form>
+
+
 {{end}}

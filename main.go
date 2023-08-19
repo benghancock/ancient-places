@@ -25,6 +25,8 @@ type Config struct {
 type SearchResult struct {
 	SearchString string          `json:"searchString"`
 	Count        int             `json:"count"`
+	PageNo       int             `json:"pageNo"`
+	NextPage     int             `json:"nextPage"`
 	Results      []PleiadesPlace `json:"results"`
 }
 
@@ -91,6 +93,8 @@ func main() {
 
 		result.SearchString = country
 		result.Count = matchCount
+		result.PageNo = page
+		result.NextPage = page + 1
 		result.Results = places
 
 		return c.Render(http.StatusOK, "base", result)
