@@ -22,8 +22,9 @@ type Config struct {
 }
 
 type SearchResult struct {
-	Count   int             `json:"count"`
-	Results []PleiadesPlace `json:"results"`
+	SearchString string          `json:"searchString"`
+	Count        int             `json:"count"`
+	Results      []PleiadesPlace `json:"results"`
 }
 
 type PleiadesPlace struct {
@@ -80,8 +81,11 @@ func main() {
 		result := new(SearchResult)
 		country := c.QueryParam("country")
 		places := queryCountryPlaces(db, country)
+
+		result.SearchString = country
 		result.Count = len(places)
 		result.Results = places
+
 		return c.Render(http.StatusOK, "base", result)
 	})
 
