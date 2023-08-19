@@ -18,6 +18,8 @@ import (
 
 var db *sql.DB
 
+const pageSize = 20
+
 type Config struct {
 	DSN string `json:"dsn"`
 }
@@ -27,6 +29,7 @@ type SearchResult struct {
 	Count        int             `json:"count"`
 	PageNo       int             `json:"pageNo"`
 	NextPage     int             `json:"nextPage"`
+	MoreResults  bool            `json:"hasMoreResults"`
 	Results      []PleiadesPlace `json:"results"`
 }
 
@@ -90,11 +93,18 @@ func main() {
 
 		matchCount := queryMatchCount(db, country)
 		places := queryCountryPlaces(db, country, page)
+		var hasMoreResults bool
+		if ((page + 1) * pageSize) > matchCount {
+			hasMoreResults = false
+		} else {
+			hasMoreResults = true
+		}
 
 		result.SearchString = country
 		result.Count = matchCount
 		result.PageNo = page
 		result.NextPage = page + 1
+		result.MoreResults = hasMoreResults
 		result.Results = places
 
 		return c.Render(http.StatusOK, "base", result)
@@ -120,7 +130,6 @@ func queryMatchCount(db *sql.DB, name string) int {
 func queryCountryPlaces(db *sql.DB, name string, page int) []PleiadesPlace {
 	var matchPlaces []PleiadesPlace
 
-	pageSize := 20
 	offset := pageSize * page
 	q := `
 		SELECT

@@ -9,6 +9,7 @@
 	</dl>
   {{ end }}
 
+  {{if .MoreResults}}
 	<form action="/search" method="get">
 	  <p>
 		<input type="hidden" id="country" name="country" value="{{.SearchString}}" />
@@ -16,6 +17,8 @@
 		<button type="submit">Next Page</button>
 	  </p>
 	</form>
-
+  {{else}}
+  <p><i>No More Results</i></p>
+  {{end}}
 
 {{end}}
