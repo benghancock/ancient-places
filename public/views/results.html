@@ -1,10 +1,9 @@
-{{define "results"}}
+{{define "main"}}
 
-<p>{{.Count}} total results</p>
+  <p>{{.Count}} total results</p>
 
-{{ range .Results }}
-<p> {{ .Name }} </p>
-{{ end }}
-
+  {{ range .Results }}
+    <p> {{ .Name }} </p>
+  {{ end }}
 
 {{end}}

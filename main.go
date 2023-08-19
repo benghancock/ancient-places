@@ -61,8 +61,13 @@ func main() {
 	db.SetMaxIdleConns(50)
 	db.SetMaxOpenConns(50)
 
+	files := []string{
+		"./public/views/base.html",
+		"./public/views/results.html",
+	}
+
 	t := &Template{
-		templates: template.Must(template.ParseGlob("public/views/*.html")),
+		templates: template.Must(template.ParseFiles(files...)),
 	}
 
 	e := echo.New()
@@ -77,7 +82,7 @@ func main() {
 		places := queryCountryPlaces(db, country)
 		result.Count = len(places)
 		result.Results = places
-		return c.Render(http.StatusOK, "results", result)
+		return c.Render(http.StatusOK, "base", result)
 	})
 
 	e.Logger.Fatal(e.Start(":1323"))
