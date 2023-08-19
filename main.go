@@ -103,7 +103,8 @@ func queryCountryPlaces(db *sql.DB, name string) []PleiadesPlace {
 			COALESCE(descrip, ''),
 			pleiades_uri
 		FROM countries_places
-		WHERE country_name ILIKE '%' || $1 || '%';
+		WHERE country_name ILIKE '%' || $1 || '%'
+		ORDER BY place_name ASC;
 	`
 	rows, err := db.Query(q, name)
 	if err != nil {
