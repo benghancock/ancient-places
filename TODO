@@ -9,7 +9,7 @@ x DONE Integrate 'echo' and build endpoints
 x DONE Clean up handling of credentials (load from config)
 x DONE Return results as JSON
 x DONE Incorporate pagination
-* TODO Move query to standalone function
+x DONE Move query to standalone function
 * TODO Support auto-completion for country names
 * TODO Use "context" to manage the query
 
@@ -18,7 +18,8 @@ x DONE Build basic HTML template for search and results
 x DONE Create stylesheet
 x DONE Style home page
 x DONE Create base template
-* TODO Improve home page
+x DONE Improve home page
+* TODO Make template handling more flexible
 * TODO Improve results display
 * TODO Improve paging navigation
 
