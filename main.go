@@ -83,34 +83,40 @@ func main() {
 	e.File("/", "public/index.html")
 	e.Static("/static", "public/assets")
 
-	e.GET("/search", func(c echo.Context) error {
-		result := new(SearchResult)
-		country := c.QueryParam("country")
-		page, err := strconv.Atoi(c.QueryParam("page"))
-		if err != nil {
-			page = 0
-		}
-
-		matchCount := queryMatchCount(db, country)
-		places := queryCountryPlaces(db, country, page)
-		var hasMoreResults bool
-		if ((page + 1) * pageSize) > matchCount {
-			hasMoreResults = false
-		} else {
-			hasMoreResults = true
-		}
-
-		result.SearchString = country
-		result.Count = matchCount
-		result.PageNo = page
-		result.NextPage = page + 1
-		result.MoreResults = hasMoreResults
-		result.Results = places
-
-		return c.Render(http.StatusOK, "base", result)
-	})
+	searchHandler := func(c echo.Context) error {
+		return searchResults(c, db)
+	}
+	e.GET("/search", searchHandler)
 
 	e.Logger.Fatal(e.Start(":1323"))
+}
+
+// searchResults builds the country search results page
+func searchResults(c echo.Context, db *sql.DB) error {
+	result := new(SearchResult)
+	country := c.QueryParam("country")
+	page, err := strconv.Atoi(c.QueryParam("page"))
+	if err != nil {
+		page = 0
+	}
+
+	matchCount := queryMatchCount(db, country)
+	places := queryCountryPlaces(db, country, page)
+	var hasMoreResults bool
+	if ((page + 1) * pageSize) > matchCount {
+		hasMoreResults = false
+	} else {
+		hasMoreResults = true
+	}
+
+	result.SearchString = country
+	result.Count = matchCount
+	result.PageNo = page
+	result.NextPage = page + 1
+	result.MoreResults = hasMoreResults
+	result.Results = places
+
+	return c.Render(http.StatusOK, "base", result)
 }
 
 // queryMatchCount returns a count of matching place results
