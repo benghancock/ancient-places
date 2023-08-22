@@ -472,3 +472,81 @@ we'll work on building the application that exposes a search API for
 our database.
 
 [materialized view]: https://www.postgresql.org/docs/current/sql-creatematerializedview.html
+
+# Appendix A: Adjusting Results By Using WKT
+
+The approach above works pretty well, but there are some issues. A
+closer inspection of our new view reveals that we actually have more
+than a couple thousand "places" _without_ any known country -- even
+when we factor out those that have no coordinates. That doesn't seem
+right.
+
+There appear to be a couple things going on here. One is that the
+coordinates in the underlying data are not always precise; this
+appears to be a fluke in some of the GIS data from Pleiades. The other
+is that some of our sites land very close to bodies of water, and thus
+don't seem to fall within the boundaries of the country borders in the
+Natural Earth shapefile data. (NE does provide maritime boundary data,
+but utilizing that was out of scope for this project.)
+
+The other, more fundamental problem, though, is that some of the
+places in the data are huge; they are regions that overlap many
+modern-day countries, or they are routes that cross many modern-day
+borders. Saying that a "place" lands in a particular country because
+that's where the centroid of the bounding box is seems pretty
+arbitrary.
+
+To remedy this, we can use the ["Well-known text"] (WKT)
+representation of the places that is present in the Pleiades data when
+performing our join. This has the additional benefit that we don't
+need to create a new geometry column in our table for the
+representative lat/lon; we can just cast the WKT string that is
+already in the data, using the PostGIS [ST_GeomFromText] function.
+
+This means we'll change the `JOIN` clause in our SQL query to create
+the view to the following:
+
+```sql
+-- snip ...
+LEFT JOIN
+    countries_political cp
+ON ST_Intersects(
+    ST_SetSRID(cp.geom, 4326),
+	ST_GeomFromText(pt.bounding_box_wkt, 4326)
+)
+WHERE pt.place_geog IS NOT NULL
+ORDER BY cp.sovereignt ASC;
+```
+
+Note how I've also explicitly set the SRID for both geometries. This
+should ensure we get more correct, consistent results.
+
+Without indexes on these columns, this query would take a long time to
+complete; it's better update the tables first, create indexes, and
+then run it again for performance.
+
+```sql
+ALTER TABLE places ADD COLUMN bb_geom geometry;
+UPDATE places SET bb_geom = ST_GeomFromText(places.bounding_box_wkt, 4326);
+
+CREATE INDEX places_bb_geom_idx ON places
+USING GIST (bb_geom);
+
+UPDATE countries_political
+SET geom = ST_SetSRID(geom, 4326);
+
+REINDEX INDEX countries_geom_idx;
+```
+
+It's still not *fast*, but it does complete -- in about 2 minutes on
+my laptop. Plus, that's the point of the materialized view. To see the
+full updated query, see the file `create_view.sql` in the `sql/`
+directory of this repository.
+
+This approach is also still not perfect: it brings back almost 4,000
+places without a matching country, often for reasons that were not
+clear to me on inspection. But it is rational, and takes advantage of
+the richer WKT data available from Pleiades.
+
+["Well-known text"]: https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry
+[ST_GeomFromText]: https://postgis.net/docs/en/ST_GeomFromText.html

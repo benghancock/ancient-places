@@ -2,7 +2,7 @@ Project TODOs
 -----------------
 
 DATABASE
-* TODO Update view to use WKT instead of lat/lon
+x DONE Update view to use WKT instead of lat/lon
 
 APPLICATION
 x DONE Integrate 'echo' and build endpoints
