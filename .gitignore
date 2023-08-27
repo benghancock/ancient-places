@@ -3,3 +3,5 @@
 *scratch.txt
 ancient-places
 conf.json
+*.swp
+*.geany
