@@ -1,24 +1,37 @@
-{{define "main"}}
+{{define "results"}}
+<!DOCTYPE html>
+<html>
 
-  <h2>{{.Count}} places found for country "{{.SearchString}}"</h2>
+  {{template "header" .}}
 
-  {{ range .Results }}
-	<dl>
-	  <dt><a href="{{.URI}}">{{ .Name }}</a></dt>
-	  <dd>{{.Description}}</dd>
-	</dl>
-  {{ end }}
+  <body>
 
-  {{if .MoreResults}}
-	<form action="/search" method="get">
-	  <p>
-		<input type="hidden" id="country" name="country" value="{{.SearchString}}" />
-		<input type="hidden" id="nextPage" name="page" value="{{.NextPage}}" />
-		<button type="submit">Next Page</button>
-	  </p>
-	</form>
-  {{else}}
-  <p><i>No More Results</i></p>
-  {{end}}
+    <h2>{{.Count}} places found for country "{{.SearchString}}"</h2>
 
+    <div class="content">
+
+      {{ range .Results }}
+      <dl>
+        <dt><a href="{{.URI}}">{{ .Name }}</a></dt>
+        <dd>{{.Description}}</dd>
+      </dl>
+      {{ end }}
+
+      {{if .MoreResults}}
+      <form action="/search" method="get">
+        <p>
+        <input type="hidden" id="country" name="country" value="{{.SearchString}}" />
+        <input type="hidden" id="nextPage" name="page" value="{{.NextPage}}" />
+        <button type="submit">Next Page</button>
+        </p>
+      </form>
+      {{else}}
+      <p><i>No More Results</i></p>
+      {{end}}
+
+    </div>
+
+  </body>
+
+</html>
 {{end}}

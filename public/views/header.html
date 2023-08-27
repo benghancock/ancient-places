@@ -1,19 +1,8 @@
-{{define "base"}}
-<!DOCTYPE html>
-<html>
-
+{{define "header"}}
   <head>
-    <title>Ancient Places Country Search</title>
+    <title>Ancient Places Country Search - {{.PageTitle}}</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" href="/static/style.css"/>
   </head>
-
-  <body>
-	<div class="content">
-	  {{template "main" . }}
-	</div>
-  </body>
-
-</html>
 {{end}}

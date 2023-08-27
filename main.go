@@ -24,7 +24,8 @@ type Config struct {
 	DSN string `json:"dsn"`
 }
 
-type SearchResult struct {
+type ResultsPage struct {
+	PageTitle    string          `json:"pageTitle"`
 	SearchString string          `json:"searchString"`
 	Count        int             `json:"count"`
 	PageNo       int             `json:"pageNo"`
@@ -68,13 +69,8 @@ func main() {
 	db.SetMaxIdleConns(50)
 	db.SetMaxOpenConns(50)
 
-	files := []string{
-		"./public/views/base.html",
-		"./public/views/results.html",
-	}
-
 	t := &Template{
-		templates: template.Must(template.ParseFiles(files...)),
+		templates: template.Must(template.ParseGlob("public/views/*.html")),
 	}
 
 	e := echo.New()
@@ -93,7 +89,7 @@ func main() {
 
 // searchResults builds the country search results page
 func searchResults(c echo.Context, db *sql.DB) error {
-	result := new(SearchResult)
+	result := new(ResultsPage)
 	country := c.QueryParam("country")
 	page, err := strconv.Atoi(c.QueryParam("page"))
 	if err != nil {
@@ -109,6 +105,7 @@ func searchResults(c echo.Context, db *sql.DB) error {
 		hasMoreResults = true
 	}
 
+	result.PageTitle = "Search Results"
 	result.SearchString = country
 	result.Count = matchCount
 	result.PageNo = page
@@ -116,7 +113,7 @@ func searchResults(c echo.Context, db *sql.DB) error {
 	result.MoreResults = hasMoreResults
 	result.Results = places
 
-	return c.Render(http.StatusOK, "base", result)
+	return c.Render(http.StatusOK, "results", result)
 }
 
 // queryMatchCount returns a count of matching place results
