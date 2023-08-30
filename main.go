@@ -24,6 +24,11 @@ type Config struct {
 	DSN string `json:"dsn"`
 }
 
+type CountryListing struct {
+	Name       string
+	PlaceCount int
+}
+
 type ResultsPage struct {
 	PageTitle    string          `json:"pageTitle"`
 	SearchString string          `json:"searchString"`
@@ -114,6 +119,34 @@ func searchResults(c echo.Context, db *sql.DB) error {
 	result.Results = places
 
 	return c.Render(http.StatusOK, "results", result)
+}
+
+// queryCountries returns a slice of all countries in the db
+func queryCountries(db *sql.DB) []CountryListing {
+	var countries []CountryListing
+	q := `
+		SELECT country_name, COUNT(place_name)
+		FROM countries_places
+		WHERE country_name IS NOT NULL
+		GROUP BY country_name
+		ORDER BY country_name ASC
+	`
+	rows, err := db.Query(q)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var country CountryListing
+		if err := rows.Scan(
+			&country.Name,
+			&country.PlaceCount,
+		); err != nil {
+			log.Fatal(err)
+		}
+		countries = append(countries, country)
+	}
+	return countries
 }
 
 // queryMatchCount returns a count of matching place results
