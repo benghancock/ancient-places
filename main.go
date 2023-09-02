@@ -20,30 +20,30 @@ var db *sql.DB
 
 const pageSize = 20
 
-type Config struct {
+type config struct {
 	DSN string `json:"dsn"`
 }
 
-type CountryListing struct {
+type countryListing struct {
 	Name       string
 	PlaceCount int
 }
 
-type PageData struct {
+type pageData struct {
 	PageTitle string
 	Data      interface{}
 }
 
-type ResultsPage struct {
+type resultsPage struct {
 	SearchString string          `json:"searchString"`
 	Count        int             `json:"count"`
 	PageNo       int             `json:"pageNo"`
 	NextPage     int             `json:"nextPage"`
 	MoreResults  bool            `json:"hasMoreResults"`
-	Results      []PleiadesPlace `json:"results"`
+	Results      []pleiadesPlace `json:"results"`
 }
 
-type PleiadesPlace struct {
+type pleiadesPlace struct {
 	Name        string `json:"name"`
 	Country     string `json:"country"`
 	PlaceType   string `json:"placeType"`
@@ -66,7 +66,7 @@ func main() {
 	}
 	defer configFile.Close()
 	decoder := json.NewDecoder(configFile)
-	conf := Config{}
+	conf := config{}
 	decoder.Decode(&conf)
 	dsn := conf.DSN
 
@@ -102,7 +102,7 @@ func main() {
 
 func buildHomepage(c echo.Context, db *sql.DB) error {
 	countryListings := queryCountries(db)
-	pd := new(PageData)
+	pd := new(pageData)
 	pd.PageTitle = "Home"
 	pd.Data = countryListings
 	return c.Render(http.StatusOK, "home", pd)
@@ -110,7 +110,7 @@ func buildHomepage(c echo.Context, db *sql.DB) error {
 
 // searchResults builds the country search results page
 func searchResults(c echo.Context, db *sql.DB) error {
-	result := new(ResultsPage)
+	result := new(resultsPage)
 	country := c.QueryParam("country")
 	page, err := strconv.Atoi(c.QueryParam("page"))
 	if err != nil {
@@ -133,7 +133,7 @@ func searchResults(c echo.Context, db *sql.DB) error {
 	result.MoreResults = hasMoreResults
 	result.Results = places
 
-	pd := new(PageData)
+	pd := new(pageData)
 	pd.PageTitle = "Search Results"
 	pd.Data = result
 
@@ -141,8 +141,8 @@ func searchResults(c echo.Context, db *sql.DB) error {
 }
 
 // queryCountries returns a slice of all countries in the db
-func queryCountries(db *sql.DB) []CountryListing {
-	var countries []CountryListing
+func queryCountries(db *sql.DB) []countryListing {
+	var countries []countryListing
 	q := `
 		SELECT country_name, COUNT(place_name)
 		FROM countries_places
@@ -156,7 +156,7 @@ func queryCountries(db *sql.DB) []CountryListing {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var country CountryListing
+		var country countryListing
 		if err := rows.Scan(
 			&country.Name,
 			&country.PlaceCount,
@@ -182,8 +182,8 @@ func queryMatchCount(db *sql.DB, name string) int {
 }
 
 // queryCountryPlaces returns a slice of matching PleiadesPlaces
-func queryCountryPlaces(db *sql.DB, name string, page int) []PleiadesPlace {
-	var matchPlaces []PleiadesPlace
+func queryCountryPlaces(db *sql.DB, name string, page int) []pleiadesPlace {
+	var matchPlaces []pleiadesPlace
 
 	offset := pageSize * page
 	q := `
@@ -205,7 +205,7 @@ func queryCountryPlaces(db *sql.DB, name string, page int) []PleiadesPlace {
 	defer rows.Close()
 
 	for rows.Next() {
-		var place PleiadesPlace
+		var place pleiadesPlace
 		if err := rows.Scan(
 			&place.Name,
 			&place.Country,
