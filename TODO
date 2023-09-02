@@ -10,7 +10,7 @@ x DONE Clean up handling of credentials (load from config)
 x DONE Return results as JSON
 x DONE Incorporate pagination
 x DONE Move query to standalone function
-* TODO Support auto-completion for country names
+x DONE Support auto-completion for country names
 * TODO Use "context" to manage the query
 
 FRONT END
@@ -19,7 +19,7 @@ x DONE Create stylesheet
 x DONE Style home page
 x DONE Create base template
 x DONE Improve home page
-* TODO Make template handling more flexible
+x DONE Make template handling more flexible
 * TODO Improve results display
 * TODO Improve paging navigation
 
