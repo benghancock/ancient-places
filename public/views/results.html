@@ -6,13 +6,17 @@
 
   <body>
 
-    <h2>{{.Data.Count}} places found for country "{{.Data.SearchString}}"</h2>
+	<p><a href="/">Home</a></p>
+
+    <h2>{{.Data.FmtCount}} places found for country "{{.Data.SearchString}}"</h2>
+
+    <h3>Viewing page {{.Data.DispThisPage}} of {{.Data.DispTotalPages}}</h3>
 
     <div class="content">
 
       {{ range $_, $result := .Data.Results }}
       <dl>
-        <dt><a href="{{$result.URI}}">{{ $result.Name }}</a></dt>
+        <dt><a href="{{$result.URI}}">{{ $result.Name }} [{{ $result.PlaceType }}]</a></dt>
         <dd>{{$result.Description}}</dd>
       </dl>
       {{ end }}
@@ -20,9 +24,9 @@
       {{if .Data.MoreResults}}
       <form action="/search" method="get">
         <p>
-        <input type="hidden" id="country" name="country" value="{{.Data.SearchString}}" />
-        <input type="hidden" id="nextPage" name="page" value="{{.Data.NextPage}}" />
-        <button type="submit">Next Page</button>
+          <input type="hidden" id="country" name="country" value="{{.Data.SearchString}}" />
+          <input type="hidden" id="nextPage" name="page" value="{{.Data.NextPage}}" />
+          <button type="submit">Next Page</button>
         </p>
       </form>
       {{else}}

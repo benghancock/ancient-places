@@ -8,12 +8,14 @@ import (
 	"html/template"
 	"io"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
 	_ "github.com/lib/pq"
+	"golang.org/x/text/message"
 )
 
 var db *sql.DB
@@ -35,12 +37,15 @@ type pageData struct {
 }
 
 type resultsPage struct {
-	SearchString string          `json:"searchString"`
-	Count        int             `json:"count"`
-	PageNo       int             `json:"pageNo"`
-	NextPage     int             `json:"nextPage"`
-	MoreResults  bool            `json:"hasMoreResults"`
-	Results      []pleiadesPlace `json:"results"`
+	SearchString   string          `json:"searchString"`
+	Count          int             `json:"count"`
+	PageNo         int             `json:"pageNo"`
+	NextPage       int             `json:"nextPage"`
+	DispThisPage   int             `json:"dispThisPage"`
+	DispTotalPages int             `json:"dispTotalpages"`
+	FmtCount       string          `json:"fmtCount"`
+	MoreResults    bool            `json:"hasMoreResults"`
+	Results        []pleiadesPlace `json:"results"`
 }
 
 type pleiadesPlace struct {
@@ -126,10 +131,21 @@ func searchResults(c echo.Context, db *sql.DB) error {
 		hasMoreResults = true
 	}
 
+	totalPages := math.Ceil(float64(matchCount / pageSize))
+	fmtPrinter := message.NewPrinter(message.MatchLanguage("en"))
+
 	result.SearchString = country
 	result.Count = matchCount
 	result.PageNo = page
 	result.NextPage = page + 1
+
+	// Data for display on the front end:
+	// Show the total counts with a thousands separator.
+	// Zero-indexed paging can be confusing.
+	result.FmtCount = fmtPrinter.Sprintf("%d", matchCount)
+	result.DispThisPage = page + 1
+	result.DispTotalPages = int(totalPages) + 1
+
 	result.MoreResults = hasMoreResults
 	result.Results = places
 
