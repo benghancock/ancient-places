@@ -29,8 +29,12 @@ type CountryListing struct {
 	PlaceCount int
 }
 
+type PageData struct {
+	PageTitle string
+	Data      interface{}
+}
+
 type ResultsPage struct {
-	PageTitle    string          `json:"pageTitle"`
 	SearchString string          `json:"searchString"`
 	Count        int             `json:"count"`
 	PageNo       int             `json:"pageNo"`
@@ -110,7 +114,6 @@ func searchResults(c echo.Context, db *sql.DB) error {
 		hasMoreResults = true
 	}
 
-	result.PageTitle = "Search Results"
 	result.SearchString = country
 	result.Count = matchCount
 	result.PageNo = page
@@ -118,7 +121,11 @@ func searchResults(c echo.Context, db *sql.DB) error {
 	result.MoreResults = hasMoreResults
 	result.Results = places
 
-	return c.Render(http.StatusOK, "results", result)
+	pd := new(PageData)
+	pd.PageTitle = "Search Results"
+	pd.Data = result
+
+	return c.Render(http.StatusOK, "results", pd)
 }
 
 // queryCountries returns a slice of all countries in the db

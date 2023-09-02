@@ -6,22 +6,22 @@
 
   <body>
 
-    <h2>{{.Count}} places found for country "{{.SearchString}}"</h2>
+    <h2>{{.Data.Count}} places found for country "{{.Data.SearchString}}"</h2>
 
     <div class="content">
 
-      {{ range .Results }}
+      {{ range $_, $result := .Data.Results }}
       <dl>
-        <dt><a href="{{.URI}}">{{ .Name }}</a></dt>
-        <dd>{{.Description}}</dd>
+        <dt><a href="{{$result.URI}}">{{ $result.Name }}</a></dt>
+        <dd>{{$result.Description}}</dd>
       </dl>
       {{ end }}
 
-      {{if .MoreResults}}
+      {{if .Data.MoreResults}}
       <form action="/search" method="get">
         <p>
-        <input type="hidden" id="country" name="country" value="{{.SearchString}}" />
-        <input type="hidden" id="nextPage" name="page" value="{{.NextPage}}" />
+        <input type="hidden" id="country" name="country" value="{{.Data.SearchString}}" />
+        <input type="hidden" id="nextPage" name="page" value="{{.Data.NextPage}}" />
         <button type="submit">Next Page</button>
         </p>
       </form>
