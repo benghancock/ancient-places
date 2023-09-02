@@ -85,8 +85,12 @@ func main() {
 	e := echo.New()
 	e.Renderer = t
 
-	e.File("/", "public/index.html")
 	e.Static("/static", "public/assets")
+
+	homeHandler := func(c echo.Context) error {
+		return buildHomepage(c, db)
+	}
+	e.GET("/", homeHandler)
 
 	searchHandler := func(c echo.Context) error {
 		return searchResults(c, db)
@@ -94,6 +98,14 @@ func main() {
 	e.GET("/search", searchHandler)
 
 	e.Logger.Fatal(e.Start(":1323"))
+}
+
+func buildHomepage(c echo.Context, db *sql.DB) error {
+	countryListings := queryCountries(db)
+	pd := new(PageData)
+	pd.PageTitle = "Home"
+	pd.Data = countryListings
+	return c.Render(http.StatusOK, "home", pd)
 }
 
 // searchResults builds the country search results page
