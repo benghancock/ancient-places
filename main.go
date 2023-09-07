@@ -94,6 +94,7 @@ func main() {
 	e.HTTPErrorHandler = customHTTPErrorHandler
 
 	e.Static("/static", "public/assets")
+	e.File("/about.html", "public/about.html")
 
 	homeHandler := func(c echo.Context) error {
 		return buildHomepage(c, db)
