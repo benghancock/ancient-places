@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fmt"
 	"database/sql"
 	"encoding/json"
 	"html/template"
@@ -88,7 +89,9 @@ func main() {
 	}
 
 	e := echo.New()
+	e.Debug = true
 	e.Renderer = t
+	e.HTTPErrorHandler = customHTTPErrorHandler
 
 	e.Static("/static", "public/assets")
 
@@ -103,6 +106,20 @@ func main() {
 	e.GET("/search", searchHandler)
 
 	e.Logger.Fatal(e.Start(":1323"))
+}
+
+// serve error pages
+// source: https://echo.labstack.com/docs/error-handling
+func customHTTPErrorHandler(err error, c echo.Context) {
+    code := http.StatusInternalServerError
+    if he, ok := err.(*echo.HTTPError); ok {
+        code = he.Code
+    }
+    c.Logger().Error(err)
+    errorPage := fmt.Sprintf("public/%d.html", code)
+    if err := c.File(errorPage); err != nil {
+        c.Logger().Error(err)
+    }
 }
 
 func buildHomepage(c echo.Context, db *sql.DB) error {
