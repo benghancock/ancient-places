@@ -11,7 +11,9 @@ x DONE Return results as JSON
 x DONE Incorporate pagination
 x DONE Move query to standalone function
 x DONE Support auto-completion for country names
+x DONE Add handlers for 404, 500 errors
 * TODO Use "context" to manage the query
+* TODO Add flag for debug mode
 
 FRONT END
 x DONE Build basic HTML template for search and results
@@ -20,12 +22,14 @@ x DONE Style home page
 x DONE Create base template
 x DONE Improve home page
 x DONE Make template handling more flexible
-* TODO Improve results display
+x DONE Improve results display
 * TODO Improve paging navigation
+x DONE Choose better home image
 
 DOCUMENTATION
+>>> STARTED Write About page
 * TODO Update README with more information on getting started
-* TODO Write out application build doc
+* TODO Write out guid doc (link from home page?)
 * TODO Reorganize repository
 
 DEPLOYMENT
