@@ -20,7 +20,7 @@ import (
 
 var db *sql.DB
 
-const pageSize = 20
+const pageSize = 200
 
 type config struct {
 	DSN string `json:"dsn"`
