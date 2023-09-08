@@ -1,14 +1,11 @@
 body {
-	background-color: lightblue;
+	background-color: oldlace;
+	max-width: 800px;
+	padding: 10px;
+	margin: auto;
+	text-align: left;
 }
 
 form {
 	display: inline-block;
-}
-
-.content {
-	max-width: 800px;
-	padding: 10px;
-	margin: auto;
-	text-align: center;
 }
