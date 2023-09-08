@@ -1,9 +1,8 @@
-// package main connects to the archaia database and serves a search page
+// package main connPageects to the archaia database and serves a search page
 // over HTTP allowing a user search for places by country name
 package main
 
 import (
-	"fmt"
 	"database/sql"
 	"encoding/json"
 	"html/template"
@@ -109,18 +108,18 @@ func main() {
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-// serve error pages
-// source: https://echo.labstack.com/docs/error-handling
+// serve error pages - source: https://echo.labstack.com/docs/error-handling
 func customHTTPErrorHandler(err error, c echo.Context) {
-    code := http.StatusInternalServerError
-    if he, ok := err.(*echo.HTTPError); ok {
-        code = he.Code
-    }
-    c.Logger().Error(err)
-    errorPage := fmt.Sprintf("public/%d.html", code)
-    if err := c.File(errorPage); err != nil {
-        c.Logger().Error(err)
-    }
+	code := http.StatusInternalServerError // default?
+	if he, ok := err.(*echo.HTTPError); ok {
+		code = he.Code
+	}
+	c.Logger().Error(err)
+	pd := new(pageData)
+	pd.PageTitle = strconv.Itoa(code)
+	if err := c.Render(code, "error", pd); err != nil {
+		c.Logger().Error(err)
+	}
 }
 
 func buildHomepage(c echo.Context, db *sql.DB) error {
