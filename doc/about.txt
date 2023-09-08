@@ -1,0 +1,56 @@
+% Ancient Places Search - About
+% Ben Hancock
+% Summer/Fall 2023
+
+Overview & Motivation
+---------------------
+
+The aim of this project is to allow archaeology enthusiasts, curious
+travelers, and amateur historians the ability to search through the
+[Pleiades] database using modern-day country names. For the unfamiliar,
+Pleiades is a public repository or “gazetteer” of geographic information
+about the ancient world. It's an amazing project, and it offers very
+robust search already. But country-based search is one missing feature.
+
+This project was also a way for me to get familiar with new-to-me
+technologies using real-world data, particularly the [Echo web framework]
+for Golang, and the [PostGIS] extension to the PostgreSQL database. All of
+which is to say, while I hope that the end product is useful to those
+who may chance upon this humble project, this was also undertaken for
+fun and learning.
+
+License & Caveats
+-----------------
+
+I cannot vouch for the accuracy of the underlying data, including
+whether the listed locations actually fall within the named
+countries. While building this project, I frequently found unexpected
+results (in particular, when a place was located next to a body of
+water or very near a border).
+
+This project is free software. For license information, see the public
+repository where this project's code is hosted:
+
+<https://github.com/benghancock/ancient-places>
+
+
+Credits
+-------
+
+The places data for this project was sourced from [Pleiades]. The
+geographic data for modern sovereign nations was sourced from [Natural
+Earth]. The image on the home page is an outline map of Syria, and is
+licensed under Creative Commons, with the following attribution:
+
+<a href="/wiki/File:Syria_location_map.svg">Syria_location_map.svg</a>: <a href="https://commons.wikimedia.org/wiki/User:NordNordWest">NordNordWest</a> <a href="/wiki/File:Syria_physical_map.svg">Syria_physical_map.svg</a>: <a href="https://commons.wikimedia.org/wiki/User:Urutseg">Urutseg</a> derivative work: <a href="https://commons.wikimedia.org/wiki/User:NordNordWest">NordNordWest</a>, <a href="https://commons.wikimedia.org/wiki/File:Syria_physical_location_map.svg">Syria physical location map</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/legalcode" rel="license">CC BY-SA 3.0</a>
+
+<hr />
+
+<footer>
+Go back <a href="/">Home</a>.
+</footer>
+
+[Pleiades]: https://pleiades.stoa.org/
+[Echo web framework]: https://echo.labstack.com
+[PostGIS]: https://postgis.net/
+[Natural Earth]: https://www.naturalearthdata.com/
