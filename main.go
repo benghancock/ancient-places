@@ -115,7 +115,6 @@ func customHTTPErrorHandler(err error, c echo.Context) {
 	if he, ok := err.(*echo.HTTPError); ok {
 		code = he.Code
 	}
-	c.Logger().Error(err)
 	pd := new(pageData)
 	pd.PageTitle = strconv.Itoa(code)
 	if err := c.Render(code, "error", pd); err != nil {
