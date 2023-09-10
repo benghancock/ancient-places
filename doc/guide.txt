@@ -1,7 +1,7 @@
 ---
 title: Ancient Places - Database Setup
 author: Ben Hancock
-date: Summer 2023
+date: Summer/Fall 2023
 lang: en-US
 ---
 
@@ -294,9 +294,9 @@ Setting the appropriate SRID ensures that when using spatial functions
 to calculate distance, etc., your results will be correct. This is
 even more important when working with data that utilizes different
 spatial reference systems. The most common SRID for geopgraphic
-coordinates is SRID 4326, which corresponds to “longitude/latitude on
-the WGS84 spheroid” [^1]. Luckily that's what all of our data uses
-throughout these exercises.
+coordinates is SRID 4326, which corresponds to
+[“longitude/latitude on the WGS84 spheroid”](https://www.postgis.net/workshops/postgis-intro/projection.html#transforming-data).
+Luckily that's what all of our data uses throughout these exercises.
 
 :::
 
@@ -315,8 +315,6 @@ SET repr_geog =
 ```
 
 [why to choose one over the other]: https://www.postgis.net/workshops/postgis-intro/geography.html#why-not-use-geography
-
-[^1]: https://www.postgis.net/workshops/postgis-intro/projection.html#transforming-data
 
 Importing Data from Natural Earth
 =================================
