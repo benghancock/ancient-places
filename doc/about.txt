@@ -1,6 +1,9 @@
-% Ancient Places Search - About
-% Ben Hancock
-% Summer/Fall 2023
+---
+title: Ancient Places Search - About
+author: Ben Hancock
+date: Summer/Fall 2023
+lang: en-US
+---
 
 Overview & Motivation
 ---------------------
@@ -42,7 +45,12 @@ geographic data for modern sovereign nations was sourced from [Natural
 Earth]. The image on the home page is an outline map of Syria, and is
 licensed under Creative Commons, with the following attribution:
 
-<a href="/wiki/File:Syria_location_map.svg">Syria_location_map.svg</a>: <a href="https://commons.wikimedia.org/wiki/User:NordNordWest">NordNordWest</a> <a href="/wiki/File:Syria_physical_map.svg">Syria_physical_map.svg</a>: <a href="https://commons.wikimedia.org/wiki/User:Urutseg">Urutseg</a> derivative work: <a href="https://commons.wikimedia.org/wiki/User:NordNordWest">NordNordWest</a>, <a href="https://commons.wikimedia.org/wiki/File:Syria_physical_location_map.svg">Syria physical location map</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/legalcode" rel="license">CC BY-SA 3.0</a>
+[Syria_location_map.svg](https://commons.wikimedia.org/wiki/File:Syria_location_map.svg):
+[NordNordWest](https://commons.wikimedia.org/wiki/User:NordNordWest)
+[Syria_physical_map](https://commons.wikimedia.org/wiki/File:Syria_physical_map.svg):
+[Urutseg](https://commons.wikimedia.org/wiki/User:Urutseg) derivative work:
+[NordNordWest](https://commons.wikimedia.org/wiki/User:NordNordWest)
+[CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
 
 <hr />
 
