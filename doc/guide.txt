@@ -2,28 +2,36 @@
 title: Ancient Places - Database Setup
 author: Ben Hancock
 date: Summer 2023
+lang: en-US
 ---
 
-# Overview
+Overview
+========
 
-This document covers how to fetch the data to build the Ancient Places
-database, and setting up the database itself. This project uses
+This document covers retrieval of the data to build the Ancient Places
+Search database, and setting up the database itself. This project uses
 PostgreSQL (version 14 or later is assumed) and the PostGIS
 extension. This tutorial assumes that you are setting up the database
 yourself, rather than using a managed service.
 
+If you are viewing this guide online, you may also wish to view the
+code repository for additional materials and context. It can be found at:
 
-# Retrieving the Data
+<https://github.com/benghancock/ancient-places>
 
-As noted in the README, this project utilizes data from two main
-sources: [Pleiades] for data on archaelogical sites, and geographical
-data from [Natural Earth]. This section covers how to retrieve and
-prepare the data prior to setting up the database that will eventually
-store it for use with the application.
+Retrieving the Data
+===================
+
+As noted in the project README, this project utilizes data from two
+main sources: [Pleiades] for data on archaelogical sites, and
+geographical data from [Natural Earth]. This section covers how to
+retrieve and prepare the data prior to setting up the database that
+will eventually store it for use with the application.
 
 Pleiades is a public repository or “gazetteer” of geographic
 information about the ancient world. It offers its data in a variety
 of formats, all of which are available at this URL:
+
 <https://pleiades.stoa.org/downloads>
 
 For this project, we will use the [GIS package], and specifically the
@@ -57,9 +65,11 @@ Once we've retrieved these, we're ready for the next step.
 [Natural Earth]: https://www.naturalearthdata.com/
 [GIS package]: https://atlantides.org/downloads/pleiades/gis/
 
-# Setting up the Database
+Setting up the Database
+=======================
 
-## Configuring Roles
+Configuring Roles
+-----------------
 
 When starting out configuring your database, it's a good idea to think
 about your security model -- even if this is just a hobby project with
@@ -79,6 +89,7 @@ database server itself. This likely varies depending on your operating
 system anyway; I built this project on a local installation of Fedora
 Linux on my laptop, so if you’re in a similar environment, you may
 find this tutorial helpful:
+
 <https://docs.fedoraproject.org/en-US/quick-docs/postgresql/>
 
 Once you have your database server installed and running, connect using the
@@ -124,7 +135,8 @@ archaia=>
 
 [role-based permissions model]: https://www.postgresql.org/docs/14/user-manag.html
 
-## Creating Tables and Loading in Data
+Creating Tables and Loading in Data
+-----------------------------------
 
 Once we have done this, we can now create the necessary tables to hold
 the "places" data we fetched from Pleiades. Please refer to the file
@@ -208,7 +220,8 @@ ORDER BY places.title ASC
 LIMIT 200;
 ```
 
-# Creating PostGIS 'Geometry' Columns
+Creating PostGIS 'Geometry' Columns
+===================================
 
 Next, we'll want to make sure that we have the PostGIS extension for
 Postgres installed and enabled; this will allow us to work with the
@@ -305,7 +318,8 @@ SET repr_geog =
 
 [^1]: https://www.postgis.net/workshops/postgis-intro/projection.html#transforming-data
 
-# Importing Data from Natural Earth
+Importing Data from Natural Earth
+=================================
 
 Now that we have our data on archaeological sites in the shape we want
 it, we need to import data on modern-day geopolitical borders in order
@@ -401,7 +415,8 @@ we need for our service.
 [`ST_Intersects`]: https://postgis.net/docs/manual-dev/en/ST_Intersects.html
 [`ST_Contains`]: https://postgis.net/docs/manual-dev/en/ST_Contains.html
 
-# Optimizing Our Data for Querying
+Optimizing Our Data for Querying
+================================
 
 Our full query will be a bit complex, since we need to perform
 multiple joins and also cast our `geography` type to a `geometry` type
@@ -473,7 +488,8 @@ our database.
 
 [materialized view]: https://www.postgresql.org/docs/current/sql-creatematerializedview.html
 
-# Appendix A: Adjusting Results By Using WKT
+Appendix A: Adjusting Results By Using WKT
+==========================================
 
 The approach above works pretty well, but there are some issues. A
 closer inspection of our new view reveals that we actually have more
