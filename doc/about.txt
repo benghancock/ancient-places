@@ -10,10 +10,12 @@ Overview & Motivation
 
 The aim of this project is to allow archaeology enthusiasts, curious
 travelers, and amateur historians the ability to search through the
-[Pleiades] database using modern-day country names. For the unfamiliar,
-Pleiades is a public repository or “gazetteer” of geographic information
-about the ancient world. It's an amazing project, and it offers very
-robust search already. But country-based search is one missing feature.
+[Pleiades] database using modern-day country names. For the
+unfamiliar, Pleiades is a public repository or “gazetteer” of
+geographic information about the ancient world. It's an amazing
+project, and it offers very robust search already. But country-based
+search is one missing feature, and is enabled in this project by
+combining data from Pleiades with data from [Natural Earth].
 
 This project was also a way for me to get familiar with new-to-me
 technologies using real-world data, particularly the [Echo web framework]
@@ -21,6 +23,11 @@ for Golang, and the [PostGIS] extension to the PostgreSQL database. All of
 which is to say, while I hope that the end product is useful to those
 who may chance upon this humble project, this was also undertaken for
 fun and learning.
+
+If you are viewing this document online, you can view a guide for
+how the data for this project was prepared on the [guide page](/guide.html).
+Or view the documentation in the code repository (see below).
+
 
 License & Caveats
 -----------------

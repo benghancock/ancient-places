@@ -7,8 +7,11 @@ CSSPATH='/static/style.css'
 
 echo "* Converting ancient-places documentation to HTML ..."
 
-pandoc --verbose -s --css=$CSSPATH -f markdown -t html \
-       -A doc/html_components/footer.html \
-       doc/about.txt > public/about.html
+for doc in doc/about.txt doc/guide.txt; do
+    bn=$(basename "$doc" .txt)
+    pandoc --verbose -s --css=$CSSPATH -f markdown -t html \
+	   -A doc/html_components/footer.html \
+	   $doc > public/${bn}.html
+done
 
 echo "* Done"

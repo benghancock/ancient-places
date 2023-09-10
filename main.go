@@ -94,6 +94,7 @@ func main() {
 
 	e.Static("/static", "public/assets")
 	e.File("/about.html", "public/about.html")
+	e.File("/guide.html", "public/guide.html")
 
 	homeHandler := func(c echo.Context) error {
 		return buildHomepage(c, db)
