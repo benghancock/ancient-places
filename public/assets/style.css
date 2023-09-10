@@ -1,11 +1,19 @@
 body {
-	background-color: oldlace;
-	max-width: 800px;
-	padding: 10px;
-	margin: auto;
-	text-align: left;
+    background-color: oldlace;
+    max-width: 800px;
+    padding: 10px;
+    margin: auto;
+    text-align: left;
 }
 
 form {
-	display: inline-block;
+    display: inline-block;
+}
+
+pre {
+    font-size: 14px;
+    background: whitesmoke;
+    border: 1px solid black;
+    padding: 10px;
+    overflow: auto;
 }
