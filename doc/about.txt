@@ -52,12 +52,6 @@ licensed under Creative Commons, with the following attribution:
 [NordNordWest](https://commons.wikimedia.org/wiki/User:NordNordWest)
 [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
 
-<hr />
-
-<footer>
-Go back <a href="/">Home</a>.
-</footer>
-
 [Pleiades]: https://pleiades.stoa.org/
 [Echo web framework]: https://echo.labstack.com
 [PostGIS]: https://postgis.net/
