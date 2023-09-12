@@ -5,3 +5,5 @@ conf.json
 *~
 *.swp
 *.geany
+run.sh
+deploy_notes.txt
