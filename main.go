@@ -60,7 +60,11 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 }
 
 func main() {
-	dsn := os.Getenv("ARCHAIDB_DSN")
+	// For dsn string format and supported params, see:
+	// https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters
+	// Normal connection strings are also supported by pq.
+
+	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
 		log.Fatal("Empty DSN")
 	}
