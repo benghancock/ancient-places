@@ -4,7 +4,6 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"html/template"
 	"io"
 	"log"
@@ -21,10 +20,6 @@ import (
 var db *sql.DB
 
 const pageSize = 200
-
-type config struct {
-	DSN string `json:"dsn"`
-}
 
 type countryListing struct {
 	Name       string
@@ -65,15 +60,15 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 }
 
 func main() {
-	configFile, err := os.Open("conf.json")
-	if err != nil {
-		log.Fatal("Error loading config file")
+	dsn := os.Getenv("ARCHAIDB_DSN")
+	if dsn == "" {
+		log.Fatal("Empty DSN")
 	}
-	defer configFile.Close()
-	decoder := json.NewDecoder(configFile)
-	conf := config{}
-	decoder.Decode(&conf)
-	dsn := conf.DSN
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "80"
+	}
 
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
@@ -88,7 +83,7 @@ func main() {
 	}
 
 	e := echo.New()
-	e.Debug = true
+	// e.Debug = true
 	e.Renderer = t
 	e.HTTPErrorHandler = customHTTPErrorHandler
 
@@ -106,7 +101,7 @@ func main() {
 	}
 	e.GET("/search", searchHandler)
 
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":"+port))
 }
 
 // serve error pages - source: https://echo.labstack.com/docs/error-handling
