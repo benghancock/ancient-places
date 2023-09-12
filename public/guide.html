@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Ben Hancock" />
+  <title>Ancient Places - Database Setup Guide</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="/static/style.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Ancient Places - Database Setup Guide</h1>
+<p class="author">Ben Hancock</p>
+<p class="date">Summer/Fall 2023</p>
+</header>
+<h1 id="overview">Overview</h1>
+<p>This document covers retrieval of the data to build the Ancient Places Search database, and setting up the database itself. This project uses PostgreSQL (version 14 or later is assumed) and the PostGIS extension. This tutorial assumes that you are setting up the database yourself, rather than using a managed service.</p>
+<p>If you are viewing this guide online, you may also wish to view the code repository for additional materials and context. It can be found at:</p>
+<p><a href="https://github.com/benghancock/ancient-places" class="uri">https://github.com/benghancock/ancient-places</a></p>
+<h1 id="retrieving-the-data">Retrieving the Data</h1>
+<p>As noted in the project README, this project utilizes data from two main sources: <a href="https://pleiades.stoa.org/">Pleiades</a> for data on archaelogical sites, and geographical data from <a href="https://www.naturalearthdata.com/">Natural Earth</a>. This section covers how to retrieve and prepare the data prior to setting up the database that will eventually store it for use with the application.</p>
+<p>Pleiades is a public repository or “gazetteer” of geographic information about the ancient world. It offers its data in a variety of formats, all of which are available at this URL:</p>
+<p><a href="https://pleiades.stoa.org/downloads" class="uri">https://pleiades.stoa.org/downloads</a></p>
+<p>For this project, we will use the <a href="https://atlantides.org/downloads/pleiades/gis/">GIS package</a>, and specifically the <code>"places*"</code> tables that it contains. For easy retrieval of the necessary tables, use the <code>fetch_pleiades_places.sh</code> script in the <code>scripts/</code> directory, found in the root of this project.</p>
+<p>Here is a useful excerpt about “places” from the Pleiades website:</p>
+<blockquote>
+<p>Pleiades places are the primary organizational construct of the gazetteer. They are conceptual entities: the term “place” applies to any locus of human attention, material or intellectual, in a real-world geographic context.</p>
+</blockquote>
+<p>Note: The document mentions that places are “entirely abstract, conceptual entities […] objects of thought, speech, or writing, not tangible, mappable points on the earth’s surface.” This may introduce some wrinkles into our project further down the line, but we’ll visit those when we get to them.</p>
+<p>Running this script will leave three files in the working directory:</p>
+<ul>
+<li><code>places.csv</code>: Pleiades Places.</li>
+<li><code>place_types.csv</code>: terms from the Place Types</li>
+<li><code>places_place_types.csv</code>: matches place ids (join to places.csv:id) to placetype ids (join to place_types.csv:key).</li>
+</ul>
+<p>Once we’ve retrieved these, we’re ready for the next step.</p>
+<h1 id="setting-up-the-database">Setting up the Database</h1>
+<h2 id="configuring-roles">Configuring Roles</h2>
+<p>When starting out configuring your database, it’s a good idea to think about your security model – even if this is just a hobby project with public data. Again, in this example I will assume that you are setting up the database yourself, and that we will be running both the Postgres server and the application on the same host. If you are using a managed service in the cloud, this will almost certainly not be the case, so your mileage may vary.</p>
+<p>Our security model will be pretty basic: we will create one role to administer the database (create the tables, etc.), and another role for the application with <code>SELECT</code>-only privileges to read the tables or views that it needs.</p>
+<p>For this document, I will leave aside how to install and set up the database server itself. This likely varies depending on your operating system anyway; I built this project on a local installation of Fedora Linux on my laptop, so if you’re in a similar environment, you may find this tutorial helpful:</p>
+<p><a href="https://docs.fedoraproject.org/en-US/quick-docs/postgresql/" class="uri">https://docs.fedoraproject.org/en-US/quick-docs/postgresql/</a></p>
+<p>Once you have your database server installed and running, connect using the <code>psql</code> command line tool. You will first need to to this as the Postgres “superuser”, named <code>postgres</code>. Below is an example session; note that the statements that were executed are echoed after they succeed:</p>
+<pre><code>$ sudo -u postgres psql
+# ... prompted for password ...
+psql (14.3)
+Type &quot;help&quot; for help.
+
+postgres=# CREATE DATABASE archaia;
+CREATE DATABASE
+postgres=# CREATE ROLE archaia_admin NOINHERIT;
+CREATE ROLE
+postgres=# ALTER DATABASE archaia OWNER TO archaia_admin;
+ALTER DATABASE
+postgres=# GRANT archaia_admin TO {your user here};
+GRANT ROLE</code></pre>
+<p>Here we are making use of Postgres’ <a href="https://www.postgresql.org/docs/14/user-manag.html">role-based permissions model</a>, by creating a database and a dedicated admin role for that database that has no other special permissions. In the final statement, we make our user (that is, the username you use on your operating system) a <em>member</em> of the <code>archaia_admin</code> group, so that we can administer this database from our regular user account without creating a new special password. We could also make others members of this group, and remove them as appropriate.</p>
+<p>Now, we are ready to exit our superuser session and log back in:</p>
+<pre><code>postgres=# \q
+$ psql -d archaia
+psql (14.3)
+Type &quot;help&quot; for help.
+
+archaia=&gt;</code></pre>
+<h2 id="creating-tables-and-loading-in-data">Creating Tables and Loading in Data</h2>
+<p>Once we have done this, we can now create the necessary tables to hold the “places” data we fetched from Pleiades. Please refer to the file <code>create_places_tables.sql</code> in the <code>sql/</code> directory of this project.</p>
+<p>With the tables created, we can now load data into them using the <code>COPY</code> statement, or <code>psql</code>’s analogous <code>\copy</code> command (the latter of which typically bypasses permissions issues).</p>
+<pre><code>archaia=&gt; \copy places from &#39;/path/to/places.csv&#39; with (format csv, header);
+COPY 38953
+archaia=&gt; \copy places_types from &#39;/path/to/place_types.csv&#39; (format csv, header);
+COPY 180
+archaia=&gt; \copy places_place_types from &#39;/path/to/places_place_types.csv&#39; (format csv, header);
+ERROR:  insert or update on table &quot;places_place_types&quot; violates foreign key constraint &quot;places_place_types_place_type_fkey&quot;
+DETAIL:  Key (place_type)=(quarry-group) is not present in table &quot;places_types&quot;.</code></pre>
+<p>In our attempt to load data into the last table, we’ve run into an error; it looks like although we have a place with a “quarry-group” type, that type isn’t in our “places_types” table. We can dig into this issue with a few shell commands on the CSV data.</p>
+<p>First, let’s see how many records this impacts:</p>
+<pre><code>$ cat places_place_types.csv | grep &#39;quarry-group&#39; | wc -l
+3</code></pre>
+<p>Ok, just three records – not bad. We can drop those, or maybe we can find a close-enough type that would be appropriate?</p>
+<pre><code>$ cat place_types.csv | grep &#39;^quarry&#39;
+quarry,quarry,A quarry as defined by the Getty Art and Architecture Thesaurus: Open-air excavations from which stone for building or other purposes is or has been obtained by cutting or blasting.</code></pre>
+<p>That seems close enough. Let’s update those three records in our data file and try loading again:</p>
+<pre><code>$ sed &#39;s/quarry-group/quarry/&#39; places_place_types.csv &gt; places_place_types1.csv
+$ fg
+psql -d archaia
+
+archaia=&gt; \copy places_place_types from &#39;/path/to/places_place_types1.csv&#39; (format csv, header);
+ERROR:  insert or update on table &quot;places_place_types&quot; violates foreign key constraint &quot;places_place_types_place_type_fkey&quot;
+DETAIL:  Key (place_type)=(labeled feature) is not present in table &quot;places_types&quot;.</code></pre>
+<p>Darn, we’ve hit another missing key. This one affects a higher number of records (more than 250), and there’s nothing obviously analogous in the <code>place_types.csv</code> file. So let’s drop the constraint, and move on:</p>
+<pre><code>archaia=&gt; ALTER TABLE places_place_types
+archaia-&gt; DROP CONSTRAINT places_place_types_place_type_fkey;
+ALTER TABLE
+archaia=&gt; \copy places_place_types from &#39;/home/bgh/projects/code/ancient-places/places_place_types1.csv&#39; (format csv, header);
+COPY 43963</code></pre>
+<p>Now that we’re set up, let’s test our table setup with a query. (At this point, you may want to consider switching to a tool like [<code>pgadmin</code>] for running queries and viewing the output.)</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  places.title,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  places.<span class="kw">id</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  places_place_types.place_type,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  places_types.definition</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> places</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">LEFT</span> <span class="kw">JOIN</span> places_place_types</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> places.<span class="kw">id</span> <span class="op">=</span> places_place_types.place_id</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">LEFT</span> <span class="kw">JOIN</span> places_types</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> places_place_types.place_type <span class="op">=</span> places_types.<span class="kw">key</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> places.title <span class="kw">ASC</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">200</span>;</span></code></pre></div>
+<h1 id="creating-postgis-geometry-columns">Creating PostGIS ‘Geometry’ Columns</h1>
+<p>Next, we’ll want to make sure that we have the PostGIS extension for Postgres installed and enabled; this will allow us to work with the geographical data in the Pleiades dataset. You can enable the extension using the <code>CREATE EXTENSION</code> statement.</p>
+<p>The first time I tried this, though, I ran into an error:</p>
+<pre><code>ancient_places=&gt; CREATE EXTENSION postgis;
+ERROR:  could not open extension control file &quot;/usr/share/pgsql/extension/postgis.control&quot;: No such file or directory</code></pre>
+<p>I found that several standalone packages were provided for PostGIS by Fedora’s package manager, and installed them:</p>
+<pre><code>$ sudo dnf install postgis postgis-docs postgis-upgrade postgis-utils</code></pre>
+<p>Now, running the create extension statement works, though note that you must be the database superuser (by default, <code>postgres</code>) in order to successfully execute it. To check the version of PostGIS installed, execute this statement:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> postgis_full_version();</span></code></pre></div>
+<p>Throughout this document, I’m running PostGIS 3.2.2.</p>
+<p>The next thing for us to do is to create columns for the data using one of PostGIS’ supported geospatial data types. There are two main types to choose from: <code>geography</code> and <code>geometry</code>. The PostGIS documentation on <a href="https://www.postgis.net/workshops/postgis-intro/geography.html#why-not-use-geography">why to choose one over the other</a> is helpful on this topic, but to briefly paraphrase: the <code>geography</code> type is appropriate for geographically dispersed data, whereas <code>geometry</code> is generally appropriate for more geographically compact data. That said, PostGIS offers some useful functions for dealing with <code>geometry</code> data, and casting from one to the other is trivial.</p>
+<div class="Note">
+<p><strong>A Word (or Two) About Spatial Reference Systems</strong></p>
+<p>One important concept when working with spatial data is the idea of <em>coordinates systems</em>, or <em>spatial reference systems</em>. Explained simply, these are systems that humans can use to reflect the location of places on the earth on a map. As expressed more artfully by the <a href="https://www.postgis.net/workshops/postgis-intro/projection.html">PostGIS documentation</a>:</p>
+<blockquote>
+<p>The earth is not flat, and there is no simple way of putting it down on a flat paper map (or computer screen), so people have come up with all sorts of ingenious solutions, each with pros and cons. Some projections preserve area, so all objects have a relative size to each other; other projections preserve angles (conformal) like the Mercator projection; some projections try to find a good intermediate mix with only little distortion on several parameters. Common to all projections is that they transform the (spherical) world onto a flat Cartesian coordinate system, and which projection to choose depends on how you will be using the data.</p>
+</blockquote>
+<p>The thing to underline here is that, when working with geographic data, you should know which spatial reference system it uses. In PostGIS and other GIS systems, these are referred by their spatial reference identifier (SRID). More on that here:</p>
+<p><a href="https://postgis.net/workshops/postgis-intro/loading_data.html#srid-26918-what-s-with-that" class="uri">https://postgis.net/workshops/postgis-intro/loading_data.html#srid-26918-what-s-with-that</a></p>
+<p>Setting the appropriate SRID ensures that when using spatial functions to calculate distance, etc., your results will be correct. This is even more important when working with data that utilizes different spatial reference systems. The most common SRID for geopgraphic coordinates is SRID 4326, which corresponds to <a href="https://www.postgis.net/workshops/postgis-intro/projection.html#transforming-data">“longitude/latitude on the WGS84 spheroid”</a>. Luckily that’s what all of our data uses throughout these exercises.</p>
+</div>
+<p>We will use the representative lat/lon coordinates in our <code>places</code> table in order to construct a column of the <code>geography</code> data type.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> places</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">ADD</span> <span class="kw">COLUMN</span> repr_geog geography(POINT, <span class="dv">4326</span>);</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> places</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> repr_geog <span class="op">=</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  ST_SetSRID(</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    ST_MakePoint(representative_longitude, representative_latitude),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">4326</span>):<span class="ch">:geography</span>;</span></code></pre></div>
+<h1 id="importing-data-from-natural-earth">Importing Data from Natural Earth</h1>
+<p>Now that we have our data on archaeological sites in the shape we want it, we need to import data on modern-day geopolitical borders in order to support our goal of enabling search by country. For this, I found the “Cultural Vectors” data from Natural Earth to fit the bill:</p>
+<p><a href="https://www.naturalearthdata.com/downloads/10m-cultural-vectors/" class="uri">https://www.naturalearthdata.com/downloads/10m-cultural-vectors/</a></p>
+<p>Specifically, I downloaded the “Admin 0 - Countries” dataset. Country boundaries are, of course, a political construct and may be fluid or disputed. To this point, Natural Earth notes that it “shows de facto boundaries by default according to who controls the territory, versus de jure.” (It also offers “point-of-view” border data.)</p>
+<p>This dataset is offered as a <a href="https://en.wikipedia.org/wiki/Shapefile">shapefile</a>, and so to import it into Postgres, we’ll want to use a tool called <code>shp2pgsql</code>. This is a command-line tool that is probably included with the <code>postgis-client</code> package in your package manager. This tool has a lot of command-line options, and it’s worth exploring them by running <code>shp2pgsql -?</code>. But for our use-case, no flags are necessary:</p>
+<pre><code>$ wget &#39;https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_countries.zip&#39;
+$ unzip ne_10m_admin_0_countries.zip
+$ shp2pgsql ne_10m_admin_0_countries.shp countries_political | psql -d archaia</code></pre>
+<p>You’ll see a lot of output fly by in your terminal as the data is loaded into a new table in the <code>archaia</code> database, called <code>countries_political</code>. Back in your query tool (either pgadmin or psql), you can get information on this new table like so:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> column_name</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> information_schema.<span class="kw">columns</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> table_name <span class="op">=</span> <span class="st">&#39;countries_political&#39;</span>;</span></code></pre></div>
+<p>There are <em>a lot</em> of columns in this dataset, but there are really only two that we need to be concerned with for now: <code>sovereignt</code> and <code>geom</code>, which are the names of the countries (in English) and their geometries, respectively. Take a quick look:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> sovereignt, geom</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> countries_political</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> sovereignt <span class="kw">ASC</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div>
+<p>We’re now almost ready to do a join with our Pleiades <code>places</code> table, in order to place the sites in the modern-day borders where they can now be found. But a couple additional considerations need to be made first.</p>
+<p>First, we should consider that these places may often <em>not</em> fall neatly within current-day geopolitical borders. It’s always possible that they could fall <em>on</em> a border, and we would like to at least try to accomodate this scenario.</p>
+<p>This means that our places may have a one-to-many relationship with our countries data, and we should choose a join method that would support this. Furthermore, in line with the Pleiades note that places are often “conceptual” rather than actual mappable points on the earth, it follows that many “places” will actually not have coordinates at all, and thus won’t fall into a “country” as such – though they may have cultural ties to actual, geographic locations.</p>
+<p>In practical terms, this means that we probably want to use the PostGIS function <a href="https://postgis.net/docs/manual-dev/en/ST_Intersects.html"><code>ST_Intersects</code></a> to perform our join, rather than <a href="https://postgis.net/docs/manual-dev/en/ST_Contains.html"><code>ST_Contains</code></a>, since we will want to join places on all of the countries that they may touch. Even this is not perfect ; Pleiades’ cautions that often the coordinates given may just be the centroid of a very large bounding box covering a large area. Some of the places are also along roads or routes that traverse long distances.</p>
+<p>Before we give this a try, we’ll also want to create indexes on our spatial data columns, in order to make our query reasonably performant, and also make sure that we set the SRID for the <code>geom</code> column from the Natural Earth Data.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> countries_geom_idx <span class="kw">ON</span> countries_political</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">USING</span> GIST (geom);</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> places_repr_geog_idx <span class="kw">ON</span> places</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="kw">USING</span> GIST (repr_geog);</span></code></pre></div>
+<p>Now we’re ready to join our tables in a way that provides all the data we need for our service.</p>
+<h1 id="optimizing-our-data-for-querying">Optimizing Our Data for Querying</h1>
+<p>Our full query will be a bit complex, since we need to perform multiple joins and also cast our <code>geography</code> type to a <code>geometry</code> type in order to use the proper function. Here we go:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    cp.sovereignt <span class="kw">as</span> country_name,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    pt.place_id,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    pt.place_name,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    pt.pleiades_uri,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    pt.place_type,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    pt.place_type_def,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    pt.descrip,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    pt.repr_lon,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    pt.repr_lat</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> (</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>        places.<span class="kw">id</span> <span class="kw">as</span> place_id,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        places.repr_geog <span class="kw">as</span> place_geog,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>        places.title <span class="kw">as</span> place_name,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        places.description <span class="kw">as</span> descrip,</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        places.uri <span class="kw">as</span> pleiades_uri,</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>        places.representative_longitude <span class="kw">as</span> repr_lon,</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>        places.representative_latitude <span class="kw">as</span> repr_lat,</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>        places_place_types.place_type,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>        places_types.definition <span class="kw">as</span> place_type_def</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> places <span class="kw">LEFT</span> <span class="kw">JOIN</span> places_place_types</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> places.<span class="kw">id</span> <span class="op">=</span> places_place_types.place_id</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">LEFT</span> <span class="kw">JOIN</span> places_types</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> places_place_types.place_type <span class="op">=</span> places_types.<span class="kw">key</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ORDER</span> <span class="kw">BY</span> places.title <span class="kw">ASC</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>) <span class="kw">as</span> pt</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>    countries_political cp</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> ST_Intersects(</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    cp.geom,</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>    pt.place_geog:<span class="ch">:geometry</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> pt.place_geog <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> cp.sovereignt <span class="kw">ASC</span>;</span></code></pre></div>
+<p>On my laptop, this query takes just over a minute to complete, which is not terrible. But this is a complex query we don’t want to have to re-type often, and if we’re going to be querying <em>this</em> data, we’ll want to have it go much quicker. So let’s create a <a href="https://www.postgresql.org/docs/current/sql-creatematerializedview.html">materialized view</a> of this result, and then put an index on the “country_name” column:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">MATERIALIZED</span> <span class="kw">VIEW</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> countries_places <span class="kw">AS</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- ... long query above goes here</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> country_name_lower_idx <span class="kw">ON</span> countries_places ((<span class="fu">lower</span>(country_name)));</span></code></pre></div>
+<p>Now, a query like this runs in about 100ms, bringing back ~2,800 records.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> countries_places</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> <span class="fu">lower</span>(country_name) <span class="kw">LIKE</span> <span class="st">&#39;greece&#39;</span>;</span></code></pre></div>
+<p>Pretty neat!</p>
+<p>That concludes the database setup portion of the documentation. Next, we’ll work on building the application that exposes a search API for our database.</p>
+<h1 id="appendix-a-adjusting-results-by-using-wkt">Appendix A: Adjusting Results By Using WKT</h1>
+<p>The approach above works pretty well, but there are some issues. A closer inspection of our new view reveals that we actually have more than a couple thousand “places” <em>without</em> any known country – even when we factor out those that have no coordinates. That doesn’t seem right.</p>
+<p>There appear to be a couple things going on here. One is that the coordinates in the underlying data are not always precise; this appears to be a fluke in some of the GIS data from Pleiades. The other is that some of our sites land very close to bodies of water, and thus don’t seem to fall within the boundaries of the country borders in the Natural Earth shapefile data. (NE does provide maritime boundary data, but utilizing that was out of scope for this project.)</p>
+<p>The other, more fundamental problem, though, is that some of the places in the data are huge; they are regions that overlap many modern-day countries, or they are routes that cross many modern-day borders. Saying that a “place” lands in a particular country because that’s where the centroid of the bounding box is seems pretty arbitrary.</p>
+<p>To remedy this, we can use the <a href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry">“Well-known text”</a> (WKT) representation of the places that is present in the Pleiades data when performing our join. This has the additional benefit that we don’t need to create a new geometry column in our table for the representative lat/lon; we can just cast the WKT string that is already in the data, using the PostGIS <a href="https://postgis.net/docs/en/ST_GeomFromText.html">ST_GeomFromText</a> function.</p>
+<p>This means we’ll change the <code>JOIN</code> clause in our SQL query to create the view to the following:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- snip ...</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    countries_political cp</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> ST_Intersects(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    ST_SetSRID(cp.geom, <span class="dv">4326</span>),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    ST_GeomFromText(pt.bounding_box_wkt, <span class="dv">4326</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> pt.place_geog <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> cp.sovereignt <span class="kw">ASC</span>;</span></code></pre></div>
+<p>Note how I’ve also explicitly set the SRID for both geometries. This should ensure we get more correct, consistent results.</p>
+<p>Without indexes on these columns, this query would take a long time to complete; it’s better update the tables first, create indexes, and then run it again for performance.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> places <span class="kw">ADD</span> <span class="kw">COLUMN</span> bb_geom geometry;</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> places <span class="kw">SET</span> bb_geom <span class="op">=</span> ST_GeomFromText(places.bounding_box_wkt, <span class="dv">4326</span>);</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> places_bb_geom_idx <span class="kw">ON</span> places</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="kw">USING</span> GIST (bb_geom);</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> countries_political</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> geom <span class="op">=</span> ST_SetSRID(geom, <span class="dv">4326</span>);</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>REINDEX <span class="kw">INDEX</span> countries_geom_idx;</span></code></pre></div>
+<p>It’s still not <em>fast</em>, but it does complete – in about 2 minutes on my laptop. Plus, that’s the point of the materialized view. To see the full updated query, see the file <code>create_view.sql</code> in the <code>sql/</code> directory of this repository.</p>
+<p>This approach is also still not perfect: it brings back almost 4,000 places without a matching country, often for reasons that were not clear to me on inspection. But it is rational, and takes advantage of the richer WKT data available from Pleiades.</p>
+<hr />
+
+<footer>
+Go back <a href="/">Home</a>.
+</footer>
+</body>
+</html>
