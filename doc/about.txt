@@ -24,6 +24,15 @@ which is to say, while I hope that the end product is useful to those
 who may chance upon this humble project, this was also undertaken for
 fun and learning.
 
+One important note is that the Pleiades places returned when searching
+by country name do not necessarily fall *exclusively* within that
+country's borders; only a part of the place may overlap with that
+country's territory. Features spanning a large geographic area, (e.g.
+the [Ganges River]), will appear in searches for a variety of
+countries.  In other words, places have a one-to-many relationship
+with modern day countries. Please also note that results may not
+always be correct; see the caveats mentioned below.
+
 If you are viewing this document online, you can view a guide for
 how the data for this project was prepared on the [guide page](/guide.html).
 Or view the documentation in the code repository (see below).
@@ -32,11 +41,13 @@ Or view the documentation in the code repository (see below).
 License & Caveats
 -----------------
 
-I cannot vouch for the accuracy of the underlying data, including
-whether the listed locations actually fall within the named
-countries. While building this project, I frequently found unexpected
-results (in particular, when a place was located next to a body of
-water or very near a border).
+I made efforts to check that my methods in combining the two data sets
+produced expected results. That said, I cannot vouch for the accuracy
+or completeness of the data -- including whether the listed places
+actually fall within the named countries. When inspecting the data,
+I found instances where places fell into no country at all (usually
+when located next to a body of water) or into an unexpected country.
+For more notes on this, see the guide.
 
 This project is free software. For license information, see the public
 repository where this project's code is hosted:
@@ -59,7 +70,16 @@ licensed under Creative Commons, with the following attribution:
 [NordNordWest](https://commons.wikimedia.org/wiki/User:NordNordWest)
 [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
 
+
+Contact
+-------
+
+For questions or comments about this project, please write to:
+
+mail [at] benghancock (dot) com
+
 [Pleiades]: https://pleiades.stoa.org/
 [Echo web framework]: https://echo.labstack.com
 [PostGIS]: https://postgis.net/
 [Natural Earth]: https://www.naturalearthdata.com/
+[Ganges River]: https://pleiades.stoa.org/places/59822
