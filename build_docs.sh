@@ -9,9 +9,10 @@ echo "* Converting ancient-places documentation to HTML ..."
 
 for doc in doc/about.txt doc/guide.txt; do
     bn=$(basename "$doc" .txt)
-    pandoc --verbose -s --css=$CSSPATH -f markdown -t html \
-	   -A doc/html_components/footer.html \
-	   $doc > public/${bn}.html
+    pandoc --verbose -s --css=$CSSPATH --template="doc/html_components/pandoc_template.html" \
+        -f markdown -t html \
+        -A doc/html_components/footer.html \
+        $doc > public/${bn}.html
 done
 
 echo "* Done"
