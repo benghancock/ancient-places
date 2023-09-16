@@ -70,6 +70,8 @@ licensed under Creative Commons, with the following attribution:
 [NordNordWest](https://commons.wikimedia.org/wiki/User:NordNordWest)
 [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
 
+I chose Syria for the home page image because it is the home of the
+ancient crossroads of [Palmyra], a place I find particularly fascinating.
 
 Contact
 =======
@@ -83,3 +85,4 @@ mail [at] benghancock (dot) com
 [PostGIS]: https://postgis.net/
 [Natural Earth]: https://www.naturalearthdata.com/
 [Ganges River]: https://pleiades.stoa.org/places/59822
+[Palmyra]: https://pleiades.stoa.org/places/668331
