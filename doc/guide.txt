@@ -1,7 +1,6 @@
 ---
-title: Ancient Places - Database Setup Guide
+title: Database Setup Guide
 author: Ben Hancock
-date: Summer/Fall 2023
 lang: en-US
 ---
 
@@ -9,10 +8,10 @@ Overview
 ========
 
 This document covers retrieval of the data to build the Ancient Places
-Search database, and setting up the database itself. This project uses
-PostgreSQL (version 14 or later is assumed) and the PostGIS
-extension. This tutorial assumes that you are setting up the database
-yourself, rather than using a managed service.
+Country Search database, and setting up the database itself. This
+project uses PostgreSQL (version 14 or later is assumed) and the
+PostGIS extension. This tutorial assumes that you are setting up the
+database yourself, rather than using a managed service.
 
 If you are viewing this guide online, you may also wish to view the
 code repository for additional materials and context. It can be found at:

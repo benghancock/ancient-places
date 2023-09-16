@@ -1,12 +1,12 @@
 ---
-title: Ancient Places Search - About
+title: About this Project
 author: Ben Hancock
-date: Summer/Fall 2023
 lang: en-US
 ---
 
+
 Overview & Motivation
----------------------
+=====================
 
 The aim of this project is to allow archaeology enthusiasts, curious
 travelers, and amateur historians the ability to search through the
@@ -39,7 +39,7 @@ Or view the documentation in the code repository (see below).
 
 
 License & Caveats
------------------
+=================
 
 I made efforts to check that my methods in combining the two data sets
 produced expected results. That said, I cannot vouch for the accuracy
@@ -56,7 +56,7 @@ repository where this project's code is hosted:
 
 
 Credits
--------
+=======
 
 The places data for this project was sourced from [Pleiades]. The
 geographic data for modern sovereign nations was sourced from [Natural
@@ -72,7 +72,7 @@ licensed under Creative Commons, with the following attribution:
 
 
 Contact
--------
+=======
 
 For questions or comments about this project, please write to:
 

@@ -5,17 +5,32 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Ben Hancock" />
-  <title>Ancient Places - Database Setup Guide</title>
+  <title>Database Setup Guide</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
 <header id="title-block-header">
-<h1 class="title">Ancient Places - Database Setup Guide</h1>
+<h1 class="title">Database Setup Guide</h1>
 <p class="author">Ben Hancock</p>
-<p class="date">Summer/Fall 2023</p>
+<p class="date">Sat Sep 16 01:14:54 PM UTC 2023</p>
 </header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#retrieving-the-data">Retrieving the Data</a></li>
+<li><a href="#setting-up-the-database">Setting up the Database</a>
+<ul>
+<li><a href="#configuring-roles">Configuring Roles</a></li>
+<li><a href="#creating-tables-and-loading-in-data">Creating Tables and Loading in Data</a></li>
+</ul></li>
+<li><a href="#creating-postgis-geometry-columns">Creating PostGIS ‘Geometry’ Columns</a></li>
+<li><a href="#importing-data-from-natural-earth">Importing Data from Natural Earth</a></li>
+<li><a href="#optimizing-our-data-for-querying">Optimizing Our Data for Querying</a></li>
+<li><a href="#appendix-a-adjusting-results-by-using-wkt">Appendix A: Adjusting Results By Using WKT</a></li>
+</ul>
+</nav>
 <h1 id="overview">Overview</h1>
-<p>This document covers retrieval of the data to build the Ancient Places Search database, and setting up the database itself. This project uses PostgreSQL (version 14 or later is assumed) and the PostGIS extension. This tutorial assumes that you are setting up the database yourself, rather than using a managed service.</p>
+<p>This document covers retrieval of the data to build the Ancient Places Country Search database, and setting up the database itself. This project uses PostgreSQL (version 14 or later is assumed) and the PostGIS extension. This tutorial assumes that you are setting up the database yourself, rather than using a managed service.</p>
 <p>If you are viewing this guide online, you may also wish to view the code repository for additional materials and context. It can be found at:</p>
 <p><a href="https://github.com/benghancock/ancient-places" class="uri">https://github.com/benghancock/ancient-places</a></p>
 <h1 id="retrieving-the-data">Retrieving the Data</h1>
@@ -241,10 +256,5 @@ $ shp2pgsql ne_10m_admin_0_countries.shp countries_political | psql -d archaia</
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>REINDEX <span class="kw">INDEX</span> countries_geom_idx;</span></code></pre></div>
 <p>It’s still not <em>fast</em>, but it does complete – in about 2 minutes on my laptop. Plus, that’s the point of the materialized view. To see the full updated query, see the file <code>create_view.sql</code> in the <code>sql/</code> directory of this repository.</p>
 <p>This approach is also still not perfect: it brings back almost 4,000 places without a matching country, often for reasons that were not clear to me on inspection. But it is rational, and takes advantage of the richer WKT data available from Pleiades.</p>
-<hr />
-
-<footer>
-Go back <a href="/">Home</a>.
-</footer>
 </body>
 </html>
