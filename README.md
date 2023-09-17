@@ -1,5 +1,5 @@
-Ancient Places Country Search - Project README
-==============================================
+Ancient Places Country Search
+=============================
 
 About
 -----
@@ -17,10 +17,9 @@ application written in Go that uses the [Echo][6] web framework.
 
 This project was undertaken mainly for personal learning, and is
 publicly shared so that anyone interested in the underlying data or
-the technologies used may benefit. It is a work in progress.
-
-If you happen to be viewing this file offline, you may obtain the
-latest source from the public Git repository:
+the technologies used may benefit. It is a work in progress.<If you
+happen to be viewing this file offline, you may obtain the latest
+source from the public Git repository:
 
 <https://github.com/benghancock/ancient-places>
 
@@ -46,6 +45,13 @@ version of the Go programming language (1.19 or later recommended). To
 build from source, use the command `go build` inside this
 repository. This will create a binary called `ancient-places`, which
 will then run and serve the project over HTTP.
+
+The web application expects an environment variable called
+`DATABASE_URL` to be set, which may be either a database connection
+string or a DSN string. For more on the format of these strings,
+see the documentation for `pq`:
+
+<https://pkg.go.dev/github.com/lib/pq#hdr-Connection_String_Parameters>
 
 To build the HTML versions of the documentation, you will need
 [pandoc][7], and optimally, GNU Make. Although the HTML docs may be
@@ -73,9 +79,11 @@ remixing data from those sources, see their respective websites.
 Contact
 -------
 
-For questions or comments about this project, please write an email to
-Ben Hancock at `mail [at] benghancock (dot) com`.
+For questions or comments about this project, please write an email to:
 
+```
+mail [at] benghancock (dot) com`
+```
 
 [1]: https://pleiades.stoa.org
 [2]: https://www.naturalearthdata.com
