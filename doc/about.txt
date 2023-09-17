@@ -58,9 +58,17 @@ repository where this project's code is hosted:
 Credits
 =======
 
-The places data for this project was sourced from [Pleiades]. The
-geographic data for modern sovereign nations was sourced from [Natural
-Earth]. The image on the home page is an outline map of Syria, and is
+The places data for this project was sourced from [Pleiades]. Pleiades
+is a joint project of the Institute for the Study of the Ancient World
+at New York University and the Ancient World Mapping Center at the
+University of North Carolina at Chapel Hill. Using, sharing, and
+remixing of the content is permitted under terms of the [CC BY-SA
+3.0]. For more information, see its [credits page].
+
+The geographic data for modern sovereign nations was sourced from
+[Natural Earth].
+
+The image on the home page is an outline map of Syria, and is
 licensed under Creative Commons, with the following attribution:
 
 [Syria_location_map.svg](https://commons.wikimedia.org/wiki/File:Syria_location_map.svg):
@@ -68,7 +76,7 @@ licensed under Creative Commons, with the following attribution:
 [Syria_physical_map](https://commons.wikimedia.org/wiki/File:Syria_physical_map.svg):
 [Urutseg](https://commons.wikimedia.org/wiki/User:Urutseg) derivative work:
 [NordNordWest](https://commons.wikimedia.org/wiki/User:NordNordWest)
-[CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+[CC BY-SA 3.0].
 
 I chose Syria for the home page image because it is the home of the
 ancient crossroads of [Palmyra], a place I find particularly fascinating.
@@ -81,8 +89,10 @@ For questions or comments about this project, please write to:
 mail [at] benghancock (dot) com
 
 [Pleiades]: https://pleiades.stoa.org/
+[credits page]: https://pleiades.stoa.org/credits
 [Echo web framework]: https://echo.labstack.com
 [PostGIS]: https://postgis.net/
 [Natural Earth]: https://www.naturalearthdata.com/
 [Ganges River]: https://pleiades.stoa.org/places/59822
 [Palmyra]: https://pleiades.stoa.org/places/668331
+[CC BY-SA 3.0]: https://creativecommons.org/licenses/by-sa/3.0)
