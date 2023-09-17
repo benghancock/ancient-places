@@ -1,46 +1,78 @@
-README: Ancient Places Search
-=============================
-
-Author: Ben Hancock
-Last Update: Summer 2023
-
+Ancient Places Country Search - Project README
+==============================================
 
 About
 -----
 
-This project leverages data on archaelogical sites from [Pleiades]
-and geographical data from [Natural Earth] to make it possible to
-search for places of historical significance by country. Pleiades
+This project leverages archaeological data from [Pleiades] and spatial
+data on country boundaries from [Natural Earth] to make it possible to
+search for places of historical significance by country name. Pleiades
 offers robust search already, but this is one missing feature.
 
-This project is undertaken mainly for personal learning and
-experimentation, and is publicly shared in case anyone interested in
-the underlying data sets or the technologies used may benefit. It
-is a work in progress ...
+The two data sets are combined by performing [spatial joins] using the
+[PostGIS] extension to the [PostgreSQL] database. User-facing search
+functionality is provided via a web application written in Go that
+uses the [Echo] web framework.
+
+This project was undertaken mainly for personal learning, and is
+publicly shared so that anyone interested in the underlying data or
+the technologies used may benefit. It is a work in progress.
+
+If you happen to be viewing this file offline, you may obtain the
+latest source from the public Git repository:
+
+<https://github.com/benghancock/ancient-places>
+
+This project is currently deployed at the following URL:
+
+<https://ancient-places-search-25vto.ondigitalocean.app/>
+
+For more about this project, see the file `doc/about.txt`.
+
+
+Building & Dependencies
+-----------------------
+
+To build the database component of this project, you will need to
+install or have access to a PostgreSQL database server; you will also
+need to install the PostGIS extension, and some other related
+command-line tools. See the file `doc/guide.txt` for a full tutorial
+on how to retrieve the source data and set up the database.
+
+In order to build and run the web application, you will need a recent
+version of the Go programming language (1.19 or later recommended). To
+build from source, use the command `go build` inside this
+repository. This will create a binary called `ancient-places`, which
+will then run and serve the project over HTTP.
+
+To build the HTML versions of the documentation, you will need
+[pandoc], and optimally, GNU Make. Although the HTML docs may be
+generated without Make, the `Makefile` in this repository includes
+to do this. With Make installed, you should be able to build the whole
+project (aside from the database) just by running:
+
+```
+$ make
+```
+
+Copying
+-------
+
+This project is free software. The source code and binaries may be
+used in accordance with the LICENSE file in this repository. The
+documentation in this project may be used under the terms of the
+[CC-BY-SA 4.0] license.
+
+This repository does not include copies of the underlying data from
+either Pleiades or Natural Earth. For information on copying or
+remixing data from those sources, see their respective websites.
+
 
 [Pleiades]: https://pleiades.stoa.org
 [Natural Earth]: https://www.naturalearthdata.com
-
-
-Getting Started
----------------
-
-For information on how to use this repository, check the files in
-the `doc/` directory. Each is a plain text file following Markdown
-formatting conventions, and so can be read in your favorite editor
-or converted to HTML for viewing in the browser using a tool such
-as `pandoc`. This documentation is intended to be a guide as well
-as a sort of journal for how this project was developed, and so may
-contain inconsistencies or misunderstandings.
-
-
-Licenses
---------
-
-See the file LICENSE in this repository for copyright and other
-relevant information. This repository does not come with the data
-utilized by this project. For copyright information regarding
-Pleiades and Natural Earth, see their respective websites.
-
-
-// END //
+[Echo]: https://echo.labstack.com/
+[spatial joins]: https://www.postgis.net/workshops/postgis-intro/joins.html
+[PostGIS]: https://postgis.net/
+[PostgreSQL]: https://www.postgresql.org/
+[pandoc]: https://pandoc.org/
+[CC-BY-SA] 4.0: https://creativecommons.org/licenses/by-sa/4.0/
