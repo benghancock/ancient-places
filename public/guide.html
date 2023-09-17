@@ -20,7 +20,7 @@
 <header id="title-block-header">
 <h1 class="title">Database Setup Guide</h1>
 <p class="author">By: Ben Hancock</p>
-<p class="date">Last Updated: Sat Sep 16 08:08:45 PM UTC 2023</p>
+<p class="date">Last Updated: Sun Sep 17 01:40:47 PM UTC 2023</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -264,5 +264,9 @@ $ shp2pgsql ne_10m_admin_0_countries.shp countries_political | psql -d archaia</
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>REINDEX <span class="kw">INDEX</span> countries_geom_idx;</span></code></pre></div>
 <p>It’s still not <em>fast</em>, but it does complete – in about 2 minutes on my laptop. Plus, that’s the point of the materialized view. To see the full updated query, see the file <code>create_view.sql</code> in the <code>sql/</code> directory of this repository.</p>
 <p>This approach is also still not perfect: it brings back almost 4,000 places without a matching country, often for reasons that were not clear to me on inspection. But it is rational, and takes advantage of the richer WKT data available from Pleiades.</p>
+<footer>
+  <hr />
+  <p>Copyright Ben Hancock <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></p>
+</footer>
 </body>
 </html>
