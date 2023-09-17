@@ -18,9 +18,7 @@ pre {
     overflow: auto;
 }
 
-#overline {
-	font-size: x-large;
-	font-style: bold;
+#banner {
 	color: olivedrab;
-	padding: 5px;
+	text-decoration: underline;
 }

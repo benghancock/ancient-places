@@ -14,10 +14,10 @@ ancient-places : main.go
 	go build
 	go mod tidy
 
-public/about.html : doc/about.txt
+public/about.html : doc/about.txt doc/template.html
 	pandoc $(PANDOC_OPTS) doc/about.txt > public/about.html
 
-public/guide.html : doc/guide.txt
+public/guide.html : doc/guide.txt doc/template.html
 	pandoc --toc $(PANDOC_OPTS) doc/guide.txt > public/guide.html
 
 clean :
