@@ -1,5 +1,5 @@
-Project TODOs
------------------
+Ancient Places Country Search - Project Todos
+=============================================
 
 DATABASE
 x DONE Update view to use WKT instead of lat/lon
@@ -16,7 +16,6 @@ x DONE Add handlers for 404, 500 errors
 * TODO Add flag for debug mode
 
 FRONT END
-* TODO Improve paging navigation
 x DONE Build basic HTML template for search and results
 x DONE Choose better home image
 x DONE Create base template
@@ -25,18 +24,25 @@ x DONE Improve home page
 x DONE Improve results display
 x DONE Make template handling more flexible
 x DONE Style home page
+* TODO Improve paging navigation
 
 DOCUMENTATION
 x DONE Write About page
 x DONE Write out guide doc (link from home page?)
-* TODO Update README with more information on getting started
-* TODO Reorganize repository
+x DONE Update README with more information on getting started
+x DONE Reorganize repository
 
 DEPLOYMENT
-* DONE Research deployment options
-* DONE Sign up for Digital Ocean app platform
+x DONE Research deployment options
+x DONE Sign up for Digital Ocean app platform
   - Tutorial: https://www.jeremymorgan.com/tutorials/go/how-to-go-web-api-digital-ocean-app/
   - Docs: https://docs.digitalocean.com/products/app-platform/how-to/create-apps/
-* DONE Switch DSN config to read from environment variable
-* DONE Export data to CSV so it can be loaded to remote db
-* TODO Set up app in DO
+x DONE Switch DSN config to read from environment variable
+x DONE Export data to CSV so it can be loaded to remote db
+x DONE Set up app in DO
+
+FUTURE
+* TODO Display results on country map
+* TODO Expose search as JSON API
+  - Could support reverse lookup (i.e. Pleiades ID to country)
+  - Add country listing endpoint as a starting place
