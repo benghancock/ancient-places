@@ -75,6 +75,9 @@ This repository does not include copies of the underlying data from
 either Pleiades or Natural Earth. For information on copying or
 remixing data from those sources, see their respective websites.
 
+* <https://pleiades.stoa.org>
+* <https://www.naturalearthdata.com>
+
 
 Contact
 -------
@@ -82,7 +85,7 @@ Contact
 For questions or comments about this project, please write an email to:
 
 ```
-mail [at] benghancock (dot) com`
+mail [at] benghancock (dot) com
 ```
 
 [1]: https://pleiades.stoa.org
