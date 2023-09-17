@@ -20,7 +20,7 @@
 <header id="title-block-header">
 <h1 class="title">Database Setup Guide</h1>
 <p class="author">By: Ben Hancock</p>
-<p class="date">Last Updated: Sun Sep 17 01:40:47 PM UTC 2023</p>
+<p class="date">Last Updated: Sun Sep 17 04:19:26 PM UTC 2023</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -236,8 +236,8 @@ $ shp2pgsql ne_10m_admin_0_countries.shp countries_political | psql -d archaia</
 <p>Pretty neat!</p>
 <p>That concludes the database setup portion of the documentation. Next, we’ll work on building the application that exposes a search API for our database.</p>
 <h1 id="appendix-a-adjusting-results-by-using-wkt">Appendix A: Adjusting Results By Using WKT</h1>
-<p>The approach above works pretty well, but there are some issues. A closer inspection of our new view reveals that we actually have more than a couple thousand “places” <em>without</em> any known country – even when we factor out those that have no coordinates. That doesn’t seem right.</p>
-<p>There appear to be a couple things going on here. One is that the coordinates in the underlying data are not always precise; this appears to be a fluke in some of the GIS data from Pleiades. The other is that some of our sites land very close to bodies of water, and thus don’t seem to fall within the boundaries of the country borders in the Natural Earth shapefile data. (NE does provide maritime boundary data, but utilizing that was out of scope for this project.)</p>
+<p>The approach above works pretty well, but there are some issues. A closer inspection of our new materialized view reveals that we actually have more than a couple thousand “places” <em>without</em> any known country – even when we factor out those that have no coordinates. That doesn’t seem right.</p>
+<p>There seem to be a couple things going on here. One is that the place coordinates in the GIS data I retrieved were not always precise (this appears to be either a fluke affecting some Pleiades records or, more likely, an error in how I handled them). The other is that some of our sites land very close to bodies of water, and thus don’t seem to fall within the boundaries of the country borders in the Natural Earth shapefile data. NE does provide maritime boundary data, but utilizing that was out of scope for this project.</p>
 <p>The other, more fundamental problem, though, is that some of the places in the data are huge; they are regions that overlap many modern-day countries, or they are routes that cross many modern-day borders. Saying that a “place” lands in a particular country because that’s where the centroid of the bounding box is seems pretty arbitrary.</p>
 <p>To remedy this, we can use the <a href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry">“Well-known text”</a> (WKT) representation of the places that is present in the Pleiades data when performing our join. This has the additional benefit that we don’t need to create a new geometry column in our table for the representative lat/lon; we can just cast the WKT string that is already in the data, using the PostGIS <a href="https://postgis.net/docs/en/ST_GeomFromText.html">ST_GeomFromText</a> function.</p>
 <p>This means we’ll change the <code>JOIN</code> clause in our SQL query to create the view to the following:</p>

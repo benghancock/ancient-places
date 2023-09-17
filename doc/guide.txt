@@ -489,18 +489,19 @@ Appendix A: Adjusting Results By Using WKT
 ==========================================
 
 The approach above works pretty well, but there are some issues. A
-closer inspection of our new view reveals that we actually have more
-than a couple thousand "places" _without_ any known country -- even
-when we factor out those that have no coordinates. That doesn't seem
-right.
+closer inspection of our new materialized view reveals that we
+actually have more than a couple thousand "places" _without_ any known
+country -- even when we factor out those that have no
+coordinates. That doesn't seem right.
 
-There appear to be a couple things going on here. One is that the
-coordinates in the underlying data are not always precise; this
-appears to be a fluke in some of the GIS data from Pleiades. The other
-is that some of our sites land very close to bodies of water, and thus
-don't seem to fall within the boundaries of the country borders in the
-Natural Earth shapefile data. (NE does provide maritime boundary data,
-but utilizing that was out of scope for this project.)
+There seem to be a couple things going on here. One is that the place
+coordinates in the GIS data I retrieved were not always precise (this
+appears to be either a fluke affecting some Pleiades records or, more
+likely, an error in how I handled them). The other is that some of our
+sites land very close to bodies of water, and thus don't seem to fall
+within the boundaries of the country borders in the Natural Earth
+shapefile data. NE does provide maritime boundary data, but utilizing
+that was out of scope for this project.
 
 The other, more fundamental problem, though, is that some of the
 places in the data are huge; they are regions that overlap many
