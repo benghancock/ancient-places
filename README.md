@@ -17,7 +17,7 @@ application written in Go that uses the [Echo][6] web framework.
 
 This project was undertaken mainly for personal learning, and is
 publicly shared so that anyone interested in the underlying data or
-the technologies used may benefit. It is a work in progress.<If you
+the technologies used may benefit. It is a work in progress. If you
 happen to be viewing this file offline, you may obtain the latest
 source from the public Git repository:
 
