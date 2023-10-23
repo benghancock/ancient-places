@@ -23,10 +23,6 @@ source from the public Git repository:
 
 <https://github.com/benghancock/ancient-places>
 
-This project is currently deployed at the following URL:
-
-<https://ancient-places-search-25vto.ondigitalocean.app/>
-
 For more about this project, see the file [`doc/about.txt`](doc/about.txt).
 
 
